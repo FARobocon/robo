@@ -11,7 +11,7 @@
 　　Windows 7 Professional
 
 ■ 開発環境
-　　Visual Studio C# 2008
+　　Visual Studio C# 2010
 
 ■ 動作手順
  1. PCとNXTのSPP(Bluetooth)接続を確立する。
