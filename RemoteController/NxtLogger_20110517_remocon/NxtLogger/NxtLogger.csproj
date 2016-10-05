@@ -93,7 +93,6 @@
     </Compile>
     <Compile Include="Missions\CSVLogger.cs" />
     <Compile Include="Missions\DirectionFinder.cs" />
-    <Compile Include="Missions\MissionInterface.cs" />
     <Compile Include="Missions\RemoteControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,8 +106,6 @@
       <DependentUpon>RestoredControlForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Missions\RestoredMission.cs" />
-    <Compile Include="Missions\RobotInput.cs" />
-    <Compile Include="Missions\RobotOutput.cs" />
     <Compile Include="PortNoComparer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -170,6 +167,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Project1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MissionInterface\MissionInterface.csproj">
+      <Project>{391bce68-f751-4ba3-9679-d7c250fee88f}</Project>
+      <Name>MissionInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RemoteMission\RemoteMission.csproj">
+      <Project>{dc6adf3d-2827-4a9b-8eb2-72d4972f11af}</Project>
+      <Name>RemoteMission %28RemoteMission\RemoteMission%29</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

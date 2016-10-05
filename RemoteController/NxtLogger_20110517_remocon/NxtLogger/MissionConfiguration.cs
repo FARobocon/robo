@@ -1,12 +1,13 @@
 ﻿namespace NxtLogger
 {
+    using MissionInterface;
     using System;
     using System.Collections.Generic;
     using System.Windows.Forms;
 
     public partial class MissionConfiguration : Form
     {
-        private readonly List<Missions.MissionInterface> missions = new List<Missions.MissionInterface>();
+        private readonly List<IMissionInterface> missions = new List<IMissionInterface>();
         private readonly RetryMissionDelegate retryDelegate;
 
         public MissionConfiguration(RetryMissionDelegate retryDelegate)
@@ -16,7 +17,7 @@
             this.InitializeComponent();
         }
 
-        internal List<Missions.MissionInterface> MissionList
+        internal List<IMissionInterface> MissionList
         {
             get { return this.missions; }
         }

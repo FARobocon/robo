@@ -1,114 +1,124 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace NxtLogger.Missions
+﻿namespace MissionInterface
 {
-    public interface RobotInput
+    using System;
+
+    public struct RobotInput
     {
         /// <summary>
         /// SysTickアクセサ
         /// </summary>
-        UInt32 SysTick
+        public UInt32 SysTick
         {
             get;
+            set;
         }
 
         /// <summary>
         /// relTickアクセサ
         /// </summary>
-        UInt32 RelTick
+        public UInt32 RelTick
         {
             get;
+            set;
         }
 
         /// <summary>
         /// DataLeftアクセサ
         /// </summary>
-        SByte DataLeft
+        public SByte DataLeft
         {
             get;
+            set;
         }
 
         /// <summary>
         /// DataRightアクセサ
         /// </summary>
-        SByte DataRight
+        public SByte DataRight
         {
             get;
+            set;
         }
 
         /// <summary>
         /// battアクセサ
         /// </summary>
-        UInt16 Batt
+        public UInt16 Batt
         {
             get;
+            set;
         }
 
         /// <summary>
         /// しっぽモーターアクセサ
         /// </summary>
-        Int32 MotorCnt0
+        public Int32 MotorCnt0
         {
             get;
+            set;
         }
 
         /// <summary>
         /// 左モーターアクセサ
         /// </summary>
-        Int32 MotorCnt1
+        public Int32 MotorCnt1
         {
             get;
+            set;
         }
 
         /// <summary>
         /// 右モーターアクセサ
         /// </summary>
-        Int32 MotorCnt2
+        public Int32 MotorCnt2
         {
             get;
+            set;
         }
 
         /// <summary>
         /// 光センサアクセサ
         /// </summary>
-        Int16 SensorAdc0
+        public Int16 SensorAdc0
         {
             get;
+            set;
         }
 
         /// <summary>
         /// ジャイロセンサアクセサ
         /// </summary>
-        Int16 SensorAdc1
+        public Int16 SensorAdc1
         {
             get;
+            set;
         }
 
         /// <summary>
         /// ジャイロセンサアクセサ
         /// </summary>
-        Int16 SensorAdc2
+        public Int16 SensorAdc2
         {
             get;
+            set;
         }
 
         /// <summary>
         /// ジャイロセンサアクセサ
         /// </summary>
-        Int16 SensorAdc3
+        public Int16 SensorAdc3
         {
             get;
+            set;
         }
 
         /// <summary>
         /// i2cアクセサ
         /// </summary>
-        Int32 I2c
+        public Int32 I2c
         {
             get;
+            set;
         }
 
     }

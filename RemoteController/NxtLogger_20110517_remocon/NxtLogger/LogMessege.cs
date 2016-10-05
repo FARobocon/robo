@@ -16,14 +16,12 @@
 //
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace NxtLogger
 {
-    class LogMessege : Missions.RobotInput
+    using System;
+    using MissionInterface;
+
+    class LogMessege
     {
         private int byteNo = 0;     // パケット先頭からの番号
 
@@ -35,20 +33,6 @@ namespace NxtLogger
         // 生パケット格納配列
         private Byte[] packetHeader = new Byte[PacketHeaderLen];     // ヘッダー部
         private Byte[] packetPayload = new Byte[PacketPayloadLen];   // ペイロード部
-
-        // ログデータ
-        private UInt32  sysTick;    // システム時刻
-        private SByte   dataLeft;   // データ左
-        private SByte   dataRight;  // データ右
-        private UInt16  batt;       // バッテリーレベル
-        private Int32   motorCnt0;  // モーターカウンタ０
-        private Int32   motorCnt1;  // モーターカウンタ１
-        private Int32   motorCnt2;  // モーターカウンタ２
-        private Int16   sensorAdc0; // A/Dセンサー０
-        private Int16   sensorAdc1; // A/Dセンサー１
-        private Int16   sensorAdc2; // A/Dセンサー２
-        private Int16   sensorAdc3; // A/Dセンサー３
-        private Int32   i2c;        // I2Cセンサー
 
         private UInt32? offTick;    // 時刻オフセット（Nullable型）
         private UInt32  relTick;    // 相対時刻（ログ開始時刻からの相対時刻）
@@ -66,152 +50,11 @@ namespace NxtLogger
             this.dlg = dlg;
         }
 
-
-
-        /// <summary>
-        /// SysTickアクセサ
-        /// </summary>
-        public UInt32 SysTick
-        {
-            get
-            {
-                return this.sysTick;
-            }
+        public RobotInput InputParam 
+        { 
+            get; 
+            private set; 
         }
-
-        /// <summary>
-        /// relTickアクセサ
-        /// </summary>
-        public UInt32 RelTick
-        {
-            get
-            {
-                return this.relTick;
-            }
-        }
-
-        /// <summary>
-        /// DataLeftアクセサ
-        /// </summary>
-        public SByte DataLeft
-        {
-            get
-            {
-                return this.dataLeft;
-            }
-        }
-
-        /// <summary>
-        /// DataRightアクセサ
-        /// </summary>
-        public SByte DataRight
-        {
-            get
-            {
-                return this.dataRight;
-            }
-        }
-
-        /// <summary>
-        /// battアクセサ
-        /// </summary>
-        public UInt16 Batt
-        {
-            get
-            {
-                return this.batt;
-            }
-        }
-
-        /// <summary>
-        /// motorCnt0アクセサ
-        /// </summary>
-        public Int32 MotorCnt0
-        {
-            get
-            {
-                return this.motorCnt0;
-            }
-        }
-
-        /// <summary>
-        /// motorCnt1アクセサ
-        /// </summary>
-        public Int32 MotorCnt1
-        {
-            get
-            {
-                return this.motorCnt1;
-            }
-        }
-
-        /// <summary>
-        /// motorCnt2アクセサ
-        /// </summary>
-        public Int32 MotorCnt2
-        {
-            get
-            {
-                return this.motorCnt2;
-            }
-        }
-
-        /// <summary>
-        /// sensorAdc0アクセサ
-        /// </summary>
-        public Int16 SensorAdc0
-        {
-            get
-            {
-                return this.sensorAdc0;
-            }
-        }
-
-        /// <summary>
-        /// sensorAdc1アクセサ
-        /// </summary>
-        public Int16 SensorAdc1
-        {
-            get
-            {
-                return this.sensorAdc1;
-            }
-        }
-
-        /// <summary>
-        /// sensorAdc2アクセサ
-        /// </summary>
-        public Int16 SensorAdc2
-        {
-            get
-            {
-                return this.sensorAdc2;
-            }
-        }
-
-        /// <summary>
-        /// sensorAdc3アクセサ
-        /// </summary>
-        public Int16 SensorAdc3
-        {
-            get
-            {
-                return this.sensorAdc3;
-            }
-        }
-
-        /// <summary>
-        /// i2cアクセサ
-        /// </summary>
-        public Int32 I2c
-        {
-            get
-            {
-                return this.i2c;
-            }
-        }
-
-
 
         public void Append(Byte dat)
         {
@@ -245,38 +88,40 @@ namespace NxtLogger
                 // １パケット分のデータサイズを取り出し終えたとき
                 if (byteNo == PacketLen)
                 {
+                    RobotInput robotInput = new RobotInput();
                     // パケットをフィールドに変換
-                    this.sysTick = BitConverter.ToUInt32(packetPayload, 0);
-                    this.dataLeft = (SByte)packetPayload[4];
-                    this.dataRight = (SByte)packetPayload[5];
-                    this.batt = BitConverter.ToUInt16(packetPayload, 6);
-                    this.motorCnt0 = BitConverter.ToInt32(packetPayload, 8);
-                    this.motorCnt1 = BitConverter.ToInt32(packetPayload, 12);
-                    this.motorCnt2 = BitConverter.ToInt32(packetPayload, 16);
-                    this.sensorAdc0 = BitConverter.ToInt16(packetPayload, 20);
-                    this.sensorAdc1 = BitConverter.ToInt16(packetPayload, 22);
-                    this.sensorAdc2 = BitConverter.ToInt16(packetPayload, 24);
-                    this.sensorAdc3 = BitConverter.ToInt16(packetPayload, 26);
-                    this.i2c = BitConverter.ToInt32(packetPayload, 28);
+                    robotInput.SysTick = BitConverter.ToUInt32(packetPayload, 0);
+                    robotInput.DataLeft = (SByte)packetPayload[4];
+                    robotInput.DataRight = (SByte)packetPayload[5];
+                    robotInput.Batt = BitConverter.ToUInt16(packetPayload, 6);
+                    robotInput.MotorCnt0 = BitConverter.ToInt32(packetPayload, 8);
+                    robotInput.MotorCnt1 = BitConverter.ToInt32(packetPayload, 12);
+                    robotInput.MotorCnt2 = BitConverter.ToInt32(packetPayload, 16);
+                    robotInput.SensorAdc0 = BitConverter.ToInt16(packetPayload, 20);
+                    robotInput.SensorAdc1 = BitConverter.ToInt16(packetPayload, 22);
+                    robotInput.SensorAdc2 = BitConverter.ToInt16(packetPayload, 24);
+                    robotInput.SensorAdc3 = BitConverter.ToInt16(packetPayload, 26);
+                    robotInput.I2c = BitConverter.ToInt32(packetPayload, 28);
 
+                    this.InputParam = robotInput;
 
                     // オフセット時間が未初期化(null)ならば
                     if (offTick == null)
                     {
                         // オフセット時間（ログ開始時のシステム時刻）セット
-                        offTick = sysTick;
+                        offTick = robotInput.SysTick;
                     }
 
                     // 相対時間（ログ開始時からの時刻）計算
-                    if (sysTick >= offTick)
+                    if (robotInput.SysTick >= offTick)
                     {
                         // 通常の場合
-                        relTick = sysTick - (UInt32)offTick;
+                        relTick = robotInput.SysTick - (UInt32)offTick;
                     }
                     else
                     {
                         // システム時刻が最大値を越えて一周した場合
-                        relTick = sysTick + UInt32.MaxValue - (UInt32)offTick;
+                        relTick = robotInput.SysTick + UInt32.MaxValue - (UInt32)offTick;
                     }
 
                     // デリゲートを介してログデータ追加メソッドを呼び出し

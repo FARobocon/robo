@@ -16,27 +16,19 @@
 //
 #endregion
 
-using System;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
-using System.IO.Ports;
-using System.Diagnostics;
-using System.Collections.Generic;
-
-
-
 namespace NxtLogger
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.IO.Ports;
+    using System.Windows.Forms;
+    using MissionInterface;
+
     // デリゲート宣言
     public delegate void AppendMessegeDelegate();
     
-    public delegate void RetryMissionDelegate(Missions.RobotOutput output);
-
     public partial class Form1 : Form
     {
         // シリアルポート
@@ -51,7 +43,7 @@ namespace NxtLogger
         // ログファイル名
         private string logFileName;
 
-        private List<Missions.MissionInterface> missions_ = null;
+        private List<IMissionInterface> missions_ = null;
 
         /// <summary>
         /// Form1コンストラクタ
@@ -120,7 +112,7 @@ namespace NxtLogger
                 {
                     if (missions_.Count > 0)
                     {
-                        Missions.RobotOutput output = missions_[0].Run(log);
+                        RobotOutput output = missions_[0].Run(log.InputParam);
 
                         if ( output != null )
                            this.port.Write(output.Data, 0, output.Data.Length);
@@ -136,7 +128,7 @@ namespace NxtLogger
             }
         }
 
-        private void retrySend(Missions.RobotOutput output)
+        private void retrySend(RobotOutput output)
         {
             try
             {
@@ -224,19 +216,20 @@ namespace NxtLogger
         /// </summary>
         private void AppendTextBox()
         {
+            var input = log.InputParam;
             bufTextBox
-               += Convert.ToString(log.RelTick).PadLeft(6, ' ') + ","
-                + Convert.ToString(log.DataLeft).PadLeft(4, ' ') + ","
-                + Convert.ToString(log.DataRight).PadLeft(4, ' ') + ","
-                + Convert.ToString(log.Batt).PadLeft(4, ' ') + ","
-                + Convert.ToString(log.MotorCnt0).PadLeft(5, ' ') + ","
-                + Convert.ToString(log.MotorCnt1).PadLeft(5, ' ') + ","
-                + Convert.ToString(log.MotorCnt2).PadLeft(5, ' ') + ","
-                + Convert.ToString(log.SensorAdc0).PadLeft(4, ' ') + ","
-                + Convert.ToString(log.SensorAdc1).PadLeft(4, ' ') + ","
-                + Convert.ToString(log.SensorAdc2).PadLeft(4, ' ') + ","
-                + Convert.ToString(log.SensorAdc3).PadLeft(4, ' ') + ","
-                + Convert.ToString(log.I2c).PadLeft(4, ' ')
+               += Convert.ToString(input.RelTick).PadLeft(6, ' ') + ","
+                + Convert.ToString(input.DataLeft).PadLeft(4, ' ') + ","
+                + Convert.ToString(input.DataRight).PadLeft(4, ' ') + ","
+                + Convert.ToString(input.Batt).PadLeft(4, ' ') + ","
+                + Convert.ToString(input.MotorCnt0).PadLeft(5, ' ') + ","
+                + Convert.ToString(input.MotorCnt1).PadLeft(5, ' ') + ","
+                + Convert.ToString(input.MotorCnt2).PadLeft(5, ' ') + ","
+                + Convert.ToString(input.SensorAdc0).PadLeft(4, ' ') + ","
+                + Convert.ToString(input.SensorAdc1).PadLeft(4, ' ') + ","
+                + Convert.ToString(input.SensorAdc2).PadLeft(4, ' ') + ","
+                + Convert.ToString(input.SensorAdc3).PadLeft(4, ' ') + ","
+                + Convert.ToString(input.I2c).PadLeft(4, ' ')
                 + "\r\n";
 
 
@@ -268,19 +261,20 @@ namespace NxtLogger
         /// </summary>
         private void AppendLogFile()
         {
+            var input = log.InputParam;
             String rec
-                = Convert.ToString(log.RelTick) + ","
-                + Convert.ToString(log.DataLeft) + ","
-                + Convert.ToString(log.DataRight) + ","
-                + Convert.ToString(log.Batt) + ","
-                + Convert.ToString(log.MotorCnt0) + ","
-                + Convert.ToString(log.MotorCnt1) + ","
-                + Convert.ToString(log.MotorCnt2) + ","
-                + Convert.ToString(log.SensorAdc0) + ","
-                + Convert.ToString(log.SensorAdc1) + ","
-                + Convert.ToString(log.SensorAdc2) + ","
-                + Convert.ToString(log.SensorAdc3) + ","
-                + Convert.ToString(log.I2c) + "\r\n";
+                = Convert.ToString(input.RelTick) + ","
+                + Convert.ToString(input.DataLeft) + ","
+                + Convert.ToString(input.DataRight) + ","
+                + Convert.ToString(input.Batt) + ","
+                + Convert.ToString(input.MotorCnt0) + ","
+                + Convert.ToString(input.MotorCnt1) + ","
+                + Convert.ToString(input.MotorCnt2) + ","
+                + Convert.ToString(input.SensorAdc0) + ","
+                + Convert.ToString(input.SensorAdc1) + ","
+                + Convert.ToString(input.SensorAdc2) + ","
+                + Convert.ToString(input.SensorAdc3) + ","
+                + Convert.ToString(input.I2c) + "\r\n";
 
 
             using (StreamWriter sw = new StreamWriter(new FileStream(logFileName, FileMode.Append)))

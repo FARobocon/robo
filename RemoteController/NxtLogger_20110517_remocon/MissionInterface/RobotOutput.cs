@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace NxtLogger.Missions
+﻿namespace MissionInterface
 {
+    using System;
+
     public class RobotOutput
     {
         private byte[] val_ = new byte[6]

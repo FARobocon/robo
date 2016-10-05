@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MissionInterface;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Windows.Forms;
 
 namespace NxtLogger.Missions
 {
-    class RestoredMission : MissionInterface
+    class RestoredMission : IMissionInterface
     {
         private CSVReader reader_ = null;
         private RetryMissionDelegate retryDelegate_ = null;

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
-namespace NxtLogger.Missions
+﻿namespace NxtLogger.Missions
 {
-    public partial class RemoteControlForm : Form, MissionInterface
+    using System;
+    using System.Windows.Forms;
+    using MissionInterface;
+    using RemoteMission;
+
+    public partial class RemoteControlForm : Form, IMissionInterface
     {
-        private Byte direction_ = 0x00;
+        private Byte direction = 0x00;
         private CSVLogger logger_ = null;
         /// <summary>
         /// 2016ではおそらく無関係
@@ -30,47 +26,11 @@ namespace NxtLogger.Missions
         }
         public RobotOutput Run(RobotInput robotInput)
         {
-            RobotOutput robotOutput = new RobotOutput();
-
             Byte absSpeed = (Byte) Math.Abs(SpeedTrackBar.Value);
 
-            //スライドバーの値を0～100にキャスト
-            byte[] outputSpeed = BitConverter.GetBytes(absSpeed / (SpeedTrackBar.Maximum - SpeedTrackBar.Minimum) * 100);
+            var converter = new CommandConverter();
 
-            robotOutput[0] = byte.Parse("<");
-            //直進
-            if (direction_ == 0x80)
-            {
-                robotOutput[1] = byte.Parse("F");
-                setSpeed(robotOutput);
-            }
-            //後退
-            else if (direction_ == 0x20)
-            {
-                robotOutput[1] = byte.Parse("B");
-                setSpeed(robotOutput);
-            }
-            //右旋回
-            else if (direction_ == 0x40)
-            {
-                robotOutput[1] = byte.Parse("R");
-                setSpeed(robotOutput);
-            }
-            //左旋回
-            else if (direction_ == 0x10)
-            {
-                robotOutput[1] = byte.Parse("L");
-                setSpeed(robotOutput);
-            }
-            //停止
-            else
-            {
-                robotOutput[1] = byte.Parse("S");
-                robotOutput[2] = byte.Parse("T");
-                robotOutput[3] = byte.Parse("O");
-                robotOutput[4] = byte.Parse("P");
-            }
-            robotOutput[5] = byte.Parse(">");
+            var robotOutput = converter.Convert(absSpeed, this.direction);
 
             if (LoggingChkBox.Checked)
             {
@@ -93,10 +53,10 @@ namespace NxtLogger.Missions
         {
             switch(e.KeyData)
             {
-                case Keys.W: direction_    |= 0x80; break;
-                case Keys.S: direction_ |= 0x40; break;
-                case Keys.Z: direction_  |= 0x20; break;
-                case Keys.A: direction_  |= 0x10; break;
+                case Keys.W: this.direction |= CommandConverter.Straight; break;
+                case Keys.S: this.direction |= CommandConverter.Right; break;
+                case Keys.Z: this.direction |= CommandConverter.Back; break;
+                case Keys.A: this.direction |= CommandConverter.Left; break;
             }
         }
 
@@ -132,10 +92,10 @@ namespace NxtLogger.Missions
         {
             switch (e.KeyData)
             {
-                case Keys.W: direction_    &= 0x7F; break;
-                case Keys.S: direction_ &= 0xBF; break;
-                case Keys.Z: direction_  &= 0xDF; break;
-                case Keys.A: direction_  &= 0xEF; break;
+                case Keys.W: this.direction &= CommandConverter.ReleaseStraight; break;
+                case Keys.S: this.direction &= CommandConverter.ReleaseRight; break;
+                case Keys.Z: this.direction &= CommandConverter.ReleaseBack; break;
+                case Keys.A: this.direction &= CommandConverter.ReleaseLeft; break;
             }
         }
 
@@ -149,28 +109,5 @@ namespace NxtLogger.Missions
             retryDelegate_(new RobotOutput());
         }
 
-        private void setSpeed(RobotOutput robotOutput)
-        {
-            //スライドバーの値を取得
-            Byte absSpeed = (Byte)Math.Abs(SpeedTrackBar.Value);
-
-            //スライドバーの値を0～100にキャスト
-            byte[] outputSpeed = BitConverter.GetBytes(absSpeed / (SpeedTrackBar.Maximum - SpeedTrackBar.Minimum) * 100);
-
-            if (outputSpeed.Length == 1)
-            {
-                robotOutput[2] = byte.Parse("0");
-                robotOutput[3] = byte.Parse("0");
-            }
-            else if (outputSpeed.Length == 2)
-            {
-                robotOutput[2] = byte.Parse("0");
-            }
-            foreach (var byteSpeed in outputSpeed)
-            {
-                robotOutput[5 - outputSpeed.Length] = byteSpeed;
-
-            }
-        }
     }
 }

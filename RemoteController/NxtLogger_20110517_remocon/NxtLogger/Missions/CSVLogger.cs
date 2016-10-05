@@ -1,5 +1,6 @@
 ﻿namespace NxtLogger.Missions
 {
+    using MissionInterface;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
