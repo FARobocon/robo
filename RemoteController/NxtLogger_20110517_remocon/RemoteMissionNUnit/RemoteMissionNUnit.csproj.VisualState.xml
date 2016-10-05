@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1000]D:\C#Programs\robot2016\robo\RemoteController\NxtLogger_20110517_remocon\RemoteMissionNUnit\RemoteMissionNUnit.csproj</TopNode>
+  <SelectedNode>[0-1007]D:\C#Programs\robot2016\robo\RemoteController\NxtLogger_20110517_remocon\RemoteMissionNUnit\bin\Debug\RemoteMissionNUnit.dll</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1000]D:\C#Programs\robot2016\robo\RemoteController\NxtLogger_20110517_remocon\RemoteMissionNUnit\RemoteMissionNUnit.csproj" Expanded="true" />
+    <Node UniqueName="[0-1007]D:\C#Programs\robot2016\robo\RemoteController\NxtLogger_20110517_remocon\RemoteMissionNUnit\bin\Debug\RemoteMissionNUnit.dll" Expanded="true" />
+    <Node UniqueName="[0-1008]RemoteMissionNUnit" Expanded="true" />
+    <Node UniqueName="[0-1001]RemoteMissionNUnit.CommandConverterTest" Expanded="true" />
+    <Node UniqueName="[0-1002]RemoteMissionNUnit.CommandConverterTest.CommandConverterTest1" Expanded="true" />
+  </Nodes>
+</VisualState>

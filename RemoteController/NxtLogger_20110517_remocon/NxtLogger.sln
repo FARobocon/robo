@@ -9,7 +9,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RemoteMission", "RemoteMiss
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteMission", "RemoteMission\RemoteMission.csproj", "{DC6ADF3D-2827-4A9B-8EB2-72D4972F11AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteMissionTest", "RemoteMissionTest\RemoteMissionTest.csproj", "{2A3C947D-2D18-4155-9AFE-859BB9B54951}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteMissionNUnit", "RemoteMissionNUnit\RemoteMissionNUnit.csproj", "{5F8423DB-5DE4-48FE-B01F-3D230167538A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BDE0A3B0-C41B-4C31-9218-A013446A124A}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,16 +34,16 @@ Global
 		{DC6ADF3D-2827-4A9B-8EB2-72D4972F11AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC6ADF3D-2827-4A9B-8EB2-72D4972F11AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC6ADF3D-2827-4A9B-8EB2-72D4972F11AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A3C947D-2D18-4155-9AFE-859BB9B54951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A3C947D-2D18-4155-9AFE-859BB9B54951}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A3C947D-2D18-4155-9AFE-859BB9B54951}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A3C947D-2D18-4155-9AFE-859BB9B54951}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F8423DB-5DE4-48FE-B01F-3D230167538A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F8423DB-5DE4-48FE-B01F-3D230167538A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F8423DB-5DE4-48FE-B01F-3D230167538A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F8423DB-5DE4-48FE-B01F-3D230167538A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DC6ADF3D-2827-4A9B-8EB2-72D4972F11AF} = {38D0F751-6035-46D8-93D5-B47B9221B4D6}
-		{2A3C947D-2D18-4155-9AFE-859BB9B54951} = {38D0F751-6035-46D8-93D5-B47B9221B4D6}
+		{5F8423DB-5DE4-48FE-B01F-3D230167538A} = {38D0F751-6035-46D8-93D5-B47B9221B4D6}
 	EndGlobalSection
 EndGlobal

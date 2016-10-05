@@ -10,14 +10,14 @@
         /// <summary>
         /// 以下定数はリファクタリングしたうえ、列挙体（ビットフラグス）に変更してください
         /// </summary>
-        public readonly static byte Straight = 0x80;
-        public readonly static byte Back = 0x20;
-        public readonly static byte Right = 0x40;
-        public readonly static byte Left = 0x10;
-        public readonly static byte ReleaseStraight = 0x7F;
-        public readonly static byte ReleaseBack = 0xBF;
-        public readonly static byte ReleaseRight= 0xDF;
-        public readonly static byte ReleaseLeft = 0xEF;
+        public const byte Straight = 0x80;
+        public const byte Back = 0x20;
+        public const byte Right = 0x40;
+        public const byte Left = 0x10;
+        public const byte ReleaseStraight = 0x7F;
+        public const byte ReleaseBack = 0xBF;
+        public const byte ReleaseRight= 0xDF;
+        public const byte ReleaseLeft = 0xEF;
         
         /// <summary>
         /// 速度と方向をコマンドインタフェースに変換する
