@@ -40,6 +40,7 @@
             // SpeedTrackBar
             // 
             this.SpeedTrackBar.Location = new System.Drawing.Point(12, 36);
+            this.SpeedTrackBar.Maximum = 100;
             this.SpeedTrackBar.Name = "SpeedTrackBar";
             this.SpeedTrackBar.Size = new System.Drawing.Size(200, 45);
             this.SpeedTrackBar.TabIndex = 0;
@@ -47,6 +48,7 @@
             // TailTrackBar
             // 
             this.TailTrackBar.Location = new System.Drawing.Point(12, 87);
+            this.TailTrackBar.Maximum = 100;
             this.TailTrackBar.Name = "TailTrackBar";
             this.TailTrackBar.Size = new System.Drawing.Size(200, 45);
             this.TailTrackBar.TabIndex = 1;
