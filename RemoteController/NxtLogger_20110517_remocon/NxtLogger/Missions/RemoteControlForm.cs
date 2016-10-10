@@ -7,26 +7,27 @@
 
     public partial class RemoteControlForm : Form, IMissionInterface
     {
-        private Byte direction = 0x00;
-        private CSVLogger logger_ = null;
+        private CommandConverter.Direction direction = CommandConverter.Direction.None;
+        private CsvLogger logger = null;
         /// <summary>
-        /// 2016ではおそらく無関係
+        /// コマンドを送信するためのデリゲート
         /// </summary>
-        private RetryMissionDelegate retryDelegate_;
+        private SendMissionDelegate sendMissionDelegate;
 
         public RemoteControlForm()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
-        public void Init(RetryMissionDelegate retryDelegate)
+        public void Init(SendMissionDelegate sendDelegate)
         {
-            retryDelegate_ = retryDelegate;
+            this.sendMissionDelegate = sendDelegate;
             this.Show();
+            this.commandTimer.Enabled = true;
         }
         public RobotOutput Run(RobotInput robotInput)
         {
-            Byte absSpeed = (Byte) Math.Abs(SpeedTrackBar.Value);
+            var absSpeed = (byte) Math.Abs(this.SpeedTrackBar.Value);
 
             var converter = new CommandConverter();
 
@@ -34,11 +35,11 @@
 
             if (LoggingChkBox.Checked)
             {
-                if (logger_ == null)
+                if (this.logger == null)
                 {
-                    logger_ = new CSVLogger();
+                    this.logger = new CsvLogger();
                 }
-                logger_.append(robotOutput);
+                this.logger.Append(robotOutput);
             }
 
             return robotOutput;
@@ -53,10 +54,14 @@
         {
             switch(e.KeyData)
             {
-                case Keys.W: this.direction |= CommandConverter.Straight; break;
-                case Keys.S: this.direction |= CommandConverter.Right; break;
-                case Keys.Z: this.direction |= CommandConverter.Back; break;
-                case Keys.A: this.direction |= CommandConverter.Left; break;
+                case Keys.W: this.direction |= CommandConverter.Direction.Straight; 
+                    break;
+                case Keys.S: this.direction |= CommandConverter.Direction.Right; 
+                    break;
+                case Keys.Z: this.direction |= CommandConverter.Direction.Back; 
+                    break;
+                case Keys.A: this.direction |= CommandConverter.Direction.Left; 
+                    break;
             }
         }
 
@@ -92,21 +97,26 @@
         {
             switch (e.KeyData)
             {
-                case Keys.W: this.direction &= CommandConverter.ReleaseStraight; break;
-                case Keys.S: this.direction &= CommandConverter.ReleaseRight; break;
-                case Keys.Z: this.direction &= CommandConverter.ReleaseBack; break;
-                case Keys.A: this.direction &= CommandConverter.ReleaseLeft; break;
+                case Keys.W: this.direction &= ~CommandConverter.Direction.Straight; 
+                    break;
+                case Keys.S: this.direction &= ~CommandConverter.Direction.Right;
+                    break;
+                case Keys.Z: this.direction &= ~CommandConverter.Direction.Back; 
+                    break;
+                case Keys.A: this.direction &= ~CommandConverter.Direction.Left;
+                    break;
             }
         }
 
-        /// <summary>
-        /// 2016ではおそらく無関係
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button1_Click(object sender, EventArgs e)
+        private void CommandTimerTick(object sender, EventArgs e)
         {
-            retryDelegate_(new RobotOutput());
+            var output = this.Run(new RobotInput());
+            this.sendMissionDelegate(output);
+            var str = output.ToString("c");
+            if (str != this.sendMsgText.Text)
+            {
+                this.sendMsgText.Text = str;
+            }
         }
 
     }

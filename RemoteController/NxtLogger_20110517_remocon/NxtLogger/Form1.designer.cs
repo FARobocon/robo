@@ -40,7 +40,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.labelCTS = new System.Windows.Forms.Label();
             this.labelDSR = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.missionButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnQuit
@@ -48,14 +48,14 @@
             resources.ApplyResources(this.btnQuit, "btnQuit");
             this.btnQuit.Name = "btnQuit";
             this.btnQuit.UseVisualStyleBackColor = true;
-            this.btnQuit.Click += new System.EventHandler(this.btnQuit_Click);
+            this.btnQuit.Click += new System.EventHandler(this.BtnQuitClick);
             // 
             // chkConnect
             // 
             resources.ApplyResources(this.chkConnect, "chkConnect");
             this.chkConnect.Name = "chkConnect";
             this.chkConnect.UseVisualStyleBackColor = true;
-            this.chkConnect.CheckedChanged += new System.EventHandler(this.chkConnect_CheckedChanged);
+            this.chkConnect.CheckedChanged += new System.EventHandler(this.ChkConnectCheckedChanged);
             // 
             // boxDataView
             // 
@@ -93,7 +93,7 @@
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
             // 
             // labelCTS
             // 
@@ -109,18 +109,18 @@
             this.labelDSR.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.labelDSR.Name = "labelDSR";
             // 
-            // button1
+            // missionButton
             // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            resources.ApplyResources(this.missionButton, "missionButton");
+            this.missionButton.Name = "missionButton";
+            this.missionButton.UseVisualStyleBackColor = true;
+            this.missionButton.Click += new System.EventHandler(this.MissionButtonClick);
             // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.missionButton);
             this.Controls.Add(this.labelDSR);
             this.Controls.Add(this.labelCTS);
             this.Controls.Add(this.textLogFile);
@@ -150,7 +150,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label labelCTS;
         private System.Windows.Forms.Label labelDSR;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button missionButton;
     }
 }
 

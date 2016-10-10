@@ -4,29 +4,39 @@
 
     public class RobotOutput
     {
-        private byte[] val_ = new byte[6]
-            { (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0
-            };
-
-        public byte this[int i]
-        {
-            set { val_[i] = value; }
-            get { return val_[i];  }
-        }
+        private byte[] val = new byte[6]
+        { 
+           (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0
+        };
 
         public byte[] Data
         {
-            get { return val_; }
+            get { return this.val; }
         }
 
-        public override String ToString()
+        public byte this[int i]
         {
-            String str = "";
-            foreach(byte val in val_)
+            get { return this.val[i]; }
+            set { this.val[i] = value; }
+        }
+
+        public override string ToString()
+        {
+            string str = string.Empty;
+            foreach (byte v in this.val)
             {
-                str += val.ToString("D") + ",";
+                str += v.ToString("D") + ",";
             }
             return str;
+        }
+
+        public string ToString(string fmt)
+        {
+            if (fmt == "c")
+            {
+                return System.Text.Encoding.ASCII.GetString(this.Data);
+            }
+            return string.Empty;
         }
     }
 }

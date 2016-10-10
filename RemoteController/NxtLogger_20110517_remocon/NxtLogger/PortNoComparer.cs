@@ -1,5 +1,4 @@
 ﻿#region Copyright & License
-//
 // Copyright 2009 Takehiko YOSHIDA  (http://www.chihayafuru.jp/etrobo/)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,17 +12,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
 #endregion
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NxtLogger
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
     /// <summary>
     /// ポート番号比較クラス
     //      Array.Sortを使ったソートのためにIComparerを実装
@@ -38,16 +36,16 @@ namespace NxtLogger
         /// <returns>比較対象１－比較対象２</returns>
         public int Compare(object x, object y)
         {
-            String str1 = (String)x;
-            String str2 = (String)y;
+            string str1 = (string)x;
+            string str2 = (string)y;
 
             // 先頭の３文字("COM")を削除
             str1 = Convert.ToString(str1).Remove(0, 3);
             str2 = Convert.ToString(str2).Remove(0, 3);
 
             // ポート番号を数値として取得
-            Int16 no1;
-            Int16 no2;
+            short no1;
+            short no2;
             try
             {
                 // 文字列を整数値へ変換
@@ -56,7 +54,7 @@ namespace NxtLogger
             catch
             {
                 // 整数値への変換に失敗したら最大値を代入
-                no1 = Int16.MaxValue;
+                no1 = short.MaxValue;
             }
 
             try
@@ -67,10 +65,10 @@ namespace NxtLogger
             catch
             {
                 // 整数値への変換に失敗したら最大値を代入
-                no2 = Int16.MaxValue;
+                no2 = short.MaxValue;
             }
 
-            return (no1 - no2);
+            return no1 - no2;
         }
     }
 }

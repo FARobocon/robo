@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.SpeedTrackBar = new System.Windows.Forms.TrackBar();
             this.TailTrackBar = new System.Windows.Forms.TrackBar();
             this.TailResetButton = new System.Windows.Forms.Button();
             this.LoggingChkBox = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.commandTimer = new System.Windows.Forms.Timer(this.components);
+            this.sendMsgText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TailTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -73,22 +75,25 @@
             this.LoggingChkBox.Text = "Rec";
             this.LoggingChkBox.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // commandTimer
             // 
-            this.button1.Location = new System.Drawing.Point(186, 211);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Retry";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.commandTimer.Tick += new System.EventHandler(this.CommandTimerTick);
+            // 
+            // sendMsgText
+            // 
+            this.sendMsgText.Location = new System.Drawing.Point(12, 191);
+            this.sendMsgText.Multiline = true;
+            this.sendMsgText.Name = "sendMsgText";
+            this.sendMsgText.ReadOnly = true;
+            this.sendMsgText.Size = new System.Drawing.Size(250, 58);
+            this.sendMsgText.TabIndex = 5;
             // 
             // RemoteControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.sendMsgText);
             this.Controls.Add(this.LoggingChkBox);
             this.Controls.Add(this.TailResetButton);
             this.Controls.Add(this.TailTrackBar);
@@ -111,7 +116,8 @@
         private System.Windows.Forms.TrackBar TailTrackBar;
         private System.Windows.Forms.Button TailResetButton;
         private System.Windows.Forms.CheckBox LoggingChkBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Timer commandTimer;
+        private System.Windows.Forms.TextBox sendMsgText;
 
     }
 }

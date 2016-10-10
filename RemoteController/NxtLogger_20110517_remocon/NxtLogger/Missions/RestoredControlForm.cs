@@ -1,27 +1,26 @@
-﻿using MissionInterface;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
-namespace NxtLogger.Missions
+﻿namespace NxtLogger.Missions
 {
+    using System;
+    using System.IO;
+    using System.Windows.Forms;
+    using MissionInterface;
+
     public partial class RestoredControlForm : Form, IMissionInterface
     {
-        private CSVReader reader_ = null;
-        private RetryMissionDelegate retryDelegate_;
+        private CsvReader reader = null;
+        private SendMissionDelegate sendMissiondelegate;
         public RestoredControlForm()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-        public void Init(RetryMissionDelegate retryDelegate)
+        public void Init(SendMissionDelegate sendDelegate)
         {
-            retryDelegate_ = retryDelegate;
+            this.sendMissiondelegate = sendDelegate;
+        }
+
+        public RobotOutput Run(RobotInput robotInput)
+        {
+            return this.reader != null ? this.reader.Read() : null;
         }
 
         private void FileOpenButton_Click(object sender, EventArgs e)
@@ -41,7 +40,7 @@ namespace NxtLogger.Missions
                     {
                         using (myStream)
                         {
-                            reader_ = new CSVReader(openFileDialog1.FileName);
+                            this.reader = new CsvReader(openFileDialog1.FileName);
                         }
                     }
                 }
@@ -50,11 +49,6 @@ namespace NxtLogger.Missions
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
-        }
-
-        public RobotOutput Run(RobotInput robotInput)
-        {
-            return reader_ != null ? reader_.read() : null;
         }
     }
 }

@@ -7,17 +7,15 @@
     {
         private RobotOutput robotOutput;
 
-        /// <summary>
-        /// 以下定数はリファクタリングしたうえ、列挙体（ビットフラグス）に変更してください
-        /// </summary>
-        public const byte Straight = 0x80;
-        public const byte Back = 0x20;
-        public const byte Right = 0x40;
-        public const byte Left = 0x10;
-        public const byte ReleaseStraight = 0x7F;
-        public const byte ReleaseBack = 0xBF;
-        public const byte ReleaseRight= 0xDF;
-        public const byte ReleaseLeft = 0xEF;
+        [Flags]
+        public enum Direction
+        {
+            None = 0x00,
+            Straight = 0x01,
+            Back = 0x02,
+            Left = 0x04,
+            Right = 0x08,
+        }
         
         /// <summary>
         /// 速度と方向をコマンドインタフェースに変換する
@@ -25,40 +23,38 @@
         /// <param name="speed">速度(0 to 100)</param>
         /// <param name="direction">方向</param>
         /// <returns>RobotOutput</returns>
-        public RobotOutput Convert(int speed, byte direction)
+        public RobotOutput Convert(int speed, Direction direction)
         {
             this.robotOutput = new RobotOutput();
 
-            byte[] outputSpeed = BitConverter.GetBytes(speed);
-
             this.robotOutput[0] = Parse('<');
-            //直進
-            if (direction == Straight)
+            if (direction == Direction.Straight)
             {
+                //直進
                 this.robotOutput[1] = Parse('F');
-                setSpeed(speed);
+                this.SetSpeed(speed);
             }
-            //後退
-            else if (direction == Back)
+            else if (direction == Direction.Back)
             {
+                //後退
                 this.robotOutput[1] = Parse('B');
-                setSpeed(speed);
+                this.SetSpeed(speed);
             }
-            //右旋回
-            else if (direction == Right)
+            else if (direction == Direction.Right)
             {
+                //右旋回
                 this.robotOutput[1] = Parse('R');
-                setSpeed(speed);
+                this.SetSpeed(speed);
             }
-            //左旋回
-            else if (direction == Left)
+            else if (direction == Direction.Left)
             {
+                //左旋回
                 this.robotOutput[1] = Parse('L');
-                setSpeed(speed);
+                this.SetSpeed(speed);
             }
-            //停止
             else
             {
+                //停止
                 this.robotOutput[1] = Parse('S');
                 this.robotOutput[2] = Parse('T');
                 this.robotOutput[3] = Parse('O');
@@ -69,30 +65,38 @@
             return this.robotOutput;
         }
 
-        private void setSpeed(int speed)
+        private static byte Parse(char c)
+        {
+            var bytes = System.Text.Encoding.ASCII.GetBytes(new char[] { c });
+            return bytes[0];
+        }
+
+        private void SetSpeed(int speed)
         {
             byte[] outputSpeed = BitConverter.GetBytes(speed);
 
-            if (outputSpeed.Length == 1)
+            if (speed<10)
             {
                 this.robotOutput[2] = Parse('0');
                 this.robotOutput[3] = Parse('0');
+                this.robotOutput[4] = Parse(speed.ToString()[0]);
             }
-            else if (outputSpeed.Length == 2)
+            else if (speed < 100)
             {
                 this.robotOutput[2] = Parse('0');
+                var str = speed.ToString();
+                this.robotOutput[3] = Parse(str[0]);
+                this.robotOutput[4] = Parse(str[1]);
             }
-            foreach (var byteSpeed in outputSpeed)
+            else
             {
-                this.robotOutput[5 - outputSpeed.Length] = byteSpeed;
-
+                var str = speed.ToString();
+                this.robotOutput[2] = Parse(str[0]);
+                this.robotOutput[3] = Parse(str[1]);
+                this.robotOutput[4] = Parse(str[2]);
             }
         }
 
-        private static byte Parse(char c)
-        {
-            var bytes = System.Text.Encoding.ASCII.GetBytes(new char[]{c});
-            return bytes[0];
-        }
+        
     }
 }

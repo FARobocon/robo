@@ -7,7 +7,7 @@
         /// <summary>
         /// SysTickアクセサ
         /// </summary>
-        public UInt32 SysTick
+        public uint SysTick
         {
             get;
             set;
@@ -16,7 +16,7 @@
         /// <summary>
         /// relTickアクセサ
         /// </summary>
-        public UInt32 RelTick
+        public uint RelTick
         {
             get;
             set;
@@ -25,7 +25,7 @@
         /// <summary>
         /// DataLeftアクセサ
         /// </summary>
-        public SByte DataLeft
+        public sbyte DataLeft
         {
             get;
             set;
@@ -34,7 +34,7 @@
         /// <summary>
         /// DataRightアクセサ
         /// </summary>
-        public SByte DataRight
+        public sbyte DataRight
         {
             get;
             set;
@@ -43,7 +43,7 @@
         /// <summary>
         /// battアクセサ
         /// </summary>
-        public UInt16 Batt
+        public ushort Batt
         {
             get;
             set;
@@ -52,7 +52,7 @@
         /// <summary>
         /// しっぽモーターアクセサ
         /// </summary>
-        public Int32 MotorCnt0
+        public int MotorCnt0
         {
             get;
             set;
@@ -61,7 +61,7 @@
         /// <summary>
         /// 左モーターアクセサ
         /// </summary>
-        public Int32 MotorCnt1
+        public int MotorCnt1
         {
             get;
             set;
@@ -70,7 +70,7 @@
         /// <summary>
         /// 右モーターアクセサ
         /// </summary>
-        public Int32 MotorCnt2
+        public int MotorCnt2
         {
             get;
             set;
@@ -79,7 +79,7 @@
         /// <summary>
         /// 光センサアクセサ
         /// </summary>
-        public Int16 SensorAdc0
+        public short SensorAdc0
         {
             get;
             set;
@@ -88,7 +88,7 @@
         /// <summary>
         /// ジャイロセンサアクセサ
         /// </summary>
-        public Int16 SensorAdc1
+        public short SensorAdc1
         {
             get;
             set;
@@ -97,7 +97,7 @@
         /// <summary>
         /// ジャイロセンサアクセサ
         /// </summary>
-        public Int16 SensorAdc2
+        public short SensorAdc2
         {
             get;
             set;
@@ -106,7 +106,7 @@
         /// <summary>
         /// ジャイロセンサアクセサ
         /// </summary>
-        public Int16 SensorAdc3
+        public short SensorAdc3
         {
             get;
             set;
@@ -115,7 +115,7 @@
         /// <summary>
         /// i2cアクセサ
         /// </summary>
-        public Int32 I2c
+        public int I2c
         {
             get;
             set;

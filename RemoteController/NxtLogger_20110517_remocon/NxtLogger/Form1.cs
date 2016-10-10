@@ -1,5 +1,4 @@
 ﻿#region Copyright & License
-//
 // Copyright 2009 Takehiko YOSHIDA  (http://www.chihayafuru.jp/etrobo/)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +12,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
 #endregion
 
 namespace NxtLogger
@@ -37,13 +35,19 @@ namespace NxtLogger
         // ログデータ
         private LogMessege log;
 
-        // デリゲート
-        private AppendMessegeDelegate dlgAppendMessege;
-
         // ログファイル名
         private string logFileName;
 
-        private List<IMissionInterface> missions_ = null;
+        private List<IMissionInterface> missions = null;
+
+        // テキストボックスへの書込み遅延バッファー
+        private string bufTextBox;
+
+        // ストップウォッチ（経過時間計測）
+        private Stopwatch myStopwatch = new Stopwatch();
+
+        // デリゲート
+        private AppendMessegeDelegate dlgAppendMessege;
 
         /// <summary>
         /// Form1コンストラクタ
@@ -52,19 +56,20 @@ namespace NxtLogger
         {
             // コンポーネントの初期化
             // （コンポーネント利用に必須のデフォルト処理）
-            InitializeComponent();
+            this.InitializeComponent();
 
             // デリゲートメソッド追加登録
-            dlgAppendMessege = new AppendMessegeDelegate(AppendTextBox);    // 画面(TextBox)の更新
-            dlgAppendMessege += new AppendMessegeDelegate(AppendLogFile);   // ログファイル(*.csv)の更新
+            this.dlgAppendMessege = new AppendMessegeDelegate(this.AppendTextBox);    // 画面(TextBox)の更新
+            this.dlgAppendMessege += new AppendMessegeDelegate(this.AppendLogFile);   // ログファイル(*.csv)の更新
         }
 
-
+        // デリゲート宣言
+        public delegate void DlgLogOutput(byte[] mes);
 
         /// <summary>
         /// シリアルポート名をシステムより取得しコンボボックスに反映
         /// </summary>
-        private void PortNo_Load()
+        private void PortNoLoad()
         {
             // ソート済みのポート名一覧を取得
             string[] portNames = LogPort.GetSortedPortNames();
@@ -96,11 +101,11 @@ namespace NxtLogger
         /// （メインスレッドの）ログデータ受信
         /// </summary>
         /// <param name="mes">データ</param>
-        private void messegeReceive(Byte[] mes)
+        private void MessegeReceive(byte[] mes)
         {
             for (int i = 0; i < mes.Length; i++)
             {
-                log.Append(mes[i]);
+                this.log.Append(mes[i]);
             }
 
             System.Threading.Thread.Sleep(150);
@@ -108,11 +113,11 @@ namespace NxtLogger
             try
             {
 
-                if (this.port.IsOpen && missions_ != null)
+                if (this.port.IsOpen && this.missions != null)
                 {
-                    if (missions_.Count > 0)
+                    if (this.missions.Count > 0)
                     {
-                        RobotOutput output = missions_[0].Run(log.InputParam);
+                        RobotOutput output = this.missions[0].Run(this.log.InputParam);
 
                         if ( output != null )
                            this.port.Write(output.Data, 0, output.Data.Length);
@@ -128,15 +133,15 @@ namespace NxtLogger
             }
         }
 
-        private void retrySend(RobotOutput output)
+        private void SendMission(RobotOutput output)
         {
             try
             {
 
-                if (this.port.IsOpen && missions_ != null)
+                if (this.port.IsOpen && this.missions != null)
                 {
 
-                    if (missions_.Count > 0)
+                    if (this.missions.Count > 0)
                     {
                         if (output != null)
                             this.port.Write(output.Data, 0, output.Data.Length);
@@ -165,13 +170,13 @@ namespace NxtLogger
         private void Form1_Load(object sender, EventArgs e)
         {
             // シリアルポート番号をメニューにセット
-            PortNo_Load();
+            this.PortNoLoad();
 
             // ポートインスタンス生成
-            port = new LogPort();
+            this.port = new LogPort();
 
             // シリアルポート受信イベントハンドラー登録
-            port.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);
+            this.port.DataReceived += new SerialDataReceivedEventHandler(this.SerialPortDataReceived);
         }
 
 
@@ -197,7 +202,7 @@ namespace NxtLogger
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnQuit_Click(object sender, EventArgs e)
+        private void BtnQuitClick(object sender, EventArgs e)
         {
             // 自分自身のフォームを閉じる
             this.Close();
@@ -205,19 +210,13 @@ namespace NxtLogger
 
 
 
-        // テキストボックスへの書込み遅延バッファー
-        private String bufTextBox;
-
-        // ストップウォッチ（経過時間計測）
-        private Stopwatch myStopwatch = new Stopwatch();
-
         /// <summary>
         /// テキストボックスへログデータを追加
         /// </summary>
         private void AppendTextBox()
         {
-            var input = log.InputParam;
-            bufTextBox
+            var input = this.log.InputParam;
+            this.bufTextBox
                += Convert.ToString(input.RelTick).PadLeft(6, ' ') + ","
                 + Convert.ToString(input.DataLeft).PadLeft(4, ' ') + ","
                 + Convert.ToString(input.DataRight).PadLeft(4, ' ') + ","
@@ -237,23 +236,23 @@ namespace NxtLogger
             // 実行速度が低下するためバッファーを介して書込みをまとめて行う。
 
             // ストップウォッチ停止
-            myStopwatch.Stop();
+            this.myStopwatch.Stop();
 
             // 更新時間が一定時間内であればスキップ
-            if (myStopwatch.ElapsedMilliseconds > 20)
+            if (this.myStopwatch.ElapsedMilliseconds > 20)
             {
                 // テキストボックスへ追記
-                boxDataView.AppendText(bufTextBox);
+                boxDataView.AppendText(this.bufTextBox);
 
                 // 書込みバッファーをクリア
-                bufTextBox = String.Empty;
+                this.bufTextBox = string.Empty;
 
                 // ストップウォッチをリセット
-                myStopwatch.Reset();
+                this.myStopwatch.Reset();
             }
 
             // ストップウオッチを（再）スタート
-            myStopwatch.Start();
+            this.myStopwatch.Start();
         }
 
         /// <summary>
@@ -261,8 +260,8 @@ namespace NxtLogger
         /// </summary>
         private void AppendLogFile()
         {
-            var input = log.InputParam;
-            String rec
+            var input = this.log.InputParam;
+            string rec
                 = Convert.ToString(input.RelTick) + ","
                 + Convert.ToString(input.DataLeft) + ","
                 + Convert.ToString(input.DataRight) + ","
@@ -277,7 +276,7 @@ namespace NxtLogger
                 + Convert.ToString(input.I2c) + "\r\n";
 
 
-            using (StreamWriter sw = new StreamWriter(new FileStream(logFileName, FileMode.Append)))
+            using (StreamWriter sw = new StreamWriter(new FileStream(this.logFileName, FileMode.Append)))
             {
                 try
                 {
@@ -295,20 +294,19 @@ namespace NxtLogger
         }
 
 
-        // デリゲート宣言
-        public delegate void dlgLogOutput(Byte[] mes);
+        
 
         /// <summary>
         /// シリアルポート受信イベントハンドラ
         /// </summary>
         /// <param name="sender">センダー</param>
         /// <param name="e">イベント引数</param>
-        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            dlgLogOutput dlgByteOut = new dlgLogOutput(messegeReceive);
+            DlgLogOutput dlgByteOut = new DlgLogOutput(this.MessegeReceive);
 
             // データ受信バッファ
-            Byte[] buf = new byte[this.port.BytesToRead];
+            var buf = new byte[this.port.BytesToRead];
 
             if (buf.Length > 0)
             {
@@ -334,7 +332,7 @@ namespace NxtLogger
         /// </summary>
         /// <param name="sender">sender</param>
         /// <param name="e">event</param>
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1Tick(object sender, EventArgs e)
         {
             // ポート状態監視
             if (this.port != null && this.port.IsOpen)
@@ -383,26 +381,31 @@ namespace NxtLogger
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void chkConnect_CheckedChanged(object sender, EventArgs e)
+        private void ChkConnectCheckedChanged(object sender, EventArgs e)
         {
-            if (chkConnect.Checked)
+            if (this.chkConnect.Checked)
             {
                 DateTime timeNow = DateTime.Now;    //  現在日時の取得
 
                 // シリアルポート番号設定
-                port.Connect(this.portNoBox.Text);
+                this.port.Connect(this.portNoBox.Text);
+
+                if (!this.port.IsOpen)
+                {
+                    MessageBox.Show("接続失敗");
+                }
 
                 // COMポート番号選択COMBO BOXを無効化
-                portNoBox.Enabled = false;
+                this.portNoBox.Enabled = false;
 
                 // 日時よりログファイル名作成
-                logFileName = timeNow.ToString("yyyyMMdd_HHmmss") + ".csv";
+                this.logFileName = timeNow.ToString("yyyyMMdd_HHmmss") + ".csv";
 
                 // フォームにログファイル名を表示
-                textLogFile.Text = logFileName;
+                this.textLogFile.Text = this.logFileName;
 
                 // ログファイル(*.csv)の一行目にタイトル挿入
-                using (StreamWriter sw = new StreamWriter(new FileStream(logFileName, FileMode.Append)))
+                using (StreamWriter sw = new StreamWriter(new FileStream(this.logFileName, FileMode.Append)))
                 {
                     try
                     {
@@ -412,30 +415,30 @@ namespace NxtLogger
                     catch (Exception ex)
                     {
                         // フォームにエラー表示
-                        textLogFile.Text = "ERROR";
+                        this.textLogFile.Text = "ERROR";
 
                         Debug.WriteLine("FILE WRITE ERROR : {0}", ex.ToString());
                     }
                 }
 
                 // ログメッセージ作成
-                log = new LogMessege(dlgAppendMessege);
+                this.log = new LogMessege(this.dlgAppendMessege);
             }
             else
             {
                 // ポートの切断処理
-                port.Disconnect();
+                this.port.Disconnect();
 
                 // COMポート番号選択COMBO BOXを有効化
-                portNoBox.Enabled = true;
+                this.portNoBox.Enabled = true;
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void MissionButtonClick(object sender, EventArgs e)
         {
-            MissionConfiguration config = new MissionConfiguration(retrySend);
+            MissionConfiguration config = new MissionConfiguration(this.SendMission);
             config.ShowDialog();
-            missions_ = config.MissionList;
+            this.missions = config.MissionList;
         }
     }
 }

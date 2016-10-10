@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using System.Text;
-using System.Collections;
-
-
-namespace NxtLogger
+﻿namespace NxtLogger
 {
-    static class Program
+    using System;
+    using System.Windows.Forms;
+
+    internal static class Program
     {
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
         [STAThread]
-        static void Main()
+        internal static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

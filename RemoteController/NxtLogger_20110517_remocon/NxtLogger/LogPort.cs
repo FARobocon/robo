@@ -1,5 +1,4 @@
 ﻿#region Copyright & License
-//
 // Copyright 2009 Takehiko YOSHIDA  (http://www.chihayafuru.jp/etrobo/)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,32 +12,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
 #endregion
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO.Ports;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-
 
 namespace NxtLogger
 {
-    class LogPort : SerialPort
+    using System;
+    using System.Collections;
+    using System.Diagnostics;
+    using System.IO.Ports;
+    using System.Text.RegularExpressions;
+
+    internal class LogPort : SerialPort
     {
         /// <summary>
         /// SerialPortコンストラクタ
         /// </summary>
         public LogPort() : base()
         {
-            //
             // シリアルポートのパラメーター設定
             //      （ポート番号は未定）
-            //
             this.BaudRate = 57600;          // 通信速度（ボーレート）
             this.Parity = Parity.None;      // パリティ
             this.DataBits = 8;              // データビット
@@ -65,7 +57,7 @@ namespace NxtLogger
                     {
                         portNames[i] = portNames[i].Substring(0, 5);            // 文字数で強制的に切り詰め
                     }
-                    portNames[i] = Regex.Replace(portNames[i], "[^0-9]+$", "");   // 末尾の数字以外の文字を切り詰め
+                    portNames[i] = Regex.Replace(portNames[i], "[^0-9]+$", string.Empty);   // 末尾の数字以外の文字を切り詰め
                 }
             }
 
@@ -73,7 +65,7 @@ namespace NxtLogger
             IComparer portNoComp = new PortNoComparer();
             Array.Sort(portNames, portNoComp);
 
-            return (portNames);
+            return portNames;
         }
 
 

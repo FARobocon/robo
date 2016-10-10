@@ -1,21 +1,21 @@
-﻿using MissionInterface;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
-namespace NxtLogger.Missions
+﻿namespace NxtLogger.Missions
 {
-    class RestoredMission : IMissionInterface
-    {
-        private CSVReader reader_ = null;
-        private RetryMissionDelegate retryDelegate_ = null;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Windows.Forms;
+    using MissionInterface;
 
-        public void Init(RetryMissionDelegate retryDelegate)
+    internal class RestoredMission : IMissionInterface
+    {
+        private SendMissionDelegate retryDelegate = null;
+        private CsvReader reader = null;
+
+        public void Init(SendMissionDelegate retryDelegate)
         {
-            retryDelegate_  = retryDelegate;
+            this.retryDelegate  = retryDelegate;
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             Stream myStream = null;
             openFileDialog1.InitialDirectory = "c:\\";
@@ -31,7 +31,7 @@ namespace NxtLogger.Missions
                     {
                         using (myStream)
                         {
-                            reader_ = new CSVReader(openFileDialog1.FileName);
+                            this.reader = new CsvReader(openFileDialog1.FileName);
                         }
                     }
                 }
@@ -44,7 +44,7 @@ namespace NxtLogger.Missions
 
         public RobotOutput Run(RobotInput robotInput)
         {
-            return reader_ != null ? reader_.read() : null;
+            return this.reader != null ? this.reader.Read() : null;
         }
     }
 }
