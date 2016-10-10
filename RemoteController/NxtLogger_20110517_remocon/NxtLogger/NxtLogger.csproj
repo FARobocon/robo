@@ -15,7 +15,7 @@
     <ManifestCertificateThumbprint>1AC91A72CC042B75A488E151B14A5027FDE50825</ManifestCertificateThumbprint>
     <ManifestKeyFile>NxtLogger_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <ApplicationIcon>Project1.ico</ApplicationIcon>
     <PublishUrl>http://www.microsoft.com/myapplication/</PublishUrl>
@@ -148,7 +148,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="NxtLogger_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
