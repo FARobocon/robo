@@ -38,7 +38,7 @@ namespace NxtLogger
         // ログファイル名
         private string logFileName;
 
-        private List<IMissionInterface> missions = null;
+        private IMissionInterface mission = null;
 
         // テキストボックスへの書込み遅延バッファー
         private string bufTextBox;
@@ -112,16 +112,12 @@ namespace NxtLogger
 
             try
             {
-
-                if (this.port.IsOpen && this.missions != null)
+                if (this.port.IsOpen && this.mission != null)
                 {
-                    if (this.missions.Count > 0)
-                    {
-                        RobotOutput output = this.missions[0].Run(this.log.InputParam);
+                    RobotOutput output = this.mission.Run(this.log.InputParam);
 
-                        if ( output != null )
-                           this.port.Write(output.Data, 0, output.Data.Length);
-                    }
+                    if ( output != null )
+                        this.port.Write(output.Data, 0, output.Data.Length);
                 }
             }
             catch (Exception ex)
@@ -138,14 +134,10 @@ namespace NxtLogger
             try
             {
 
-                if (this.port.IsOpen && this.missions != null)
+                if (this.port.IsOpen && this.mission != null)
                 {
-
-                    if (this.missions.Count > 0)
-                    {
-                        if (output != null)
-                            this.port.Write(output.Data, 0, output.Data.Length);
-                    }
+                    if (output != null)
+                        this.port.Write(output.Data, 0, output.Data.Length);
                 }
             }
             catch (Exception ex)
@@ -436,9 +428,8 @@ namespace NxtLogger
 
         private void MissionButtonClick(object sender, EventArgs e)
         {
-            MissionConfiguration config = new MissionConfiguration(this.SendMission);
-            config.ShowDialog();
-            this.missions = config.MissionList;
+            this.mission = new Missions.RemoteControlForm();
+            this.mission.Init(this.SendMission);
         }
     }
 }
