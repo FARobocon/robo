@@ -12,6 +12,7 @@
         [TestCase(0, CommandConverter.Direction.Straight, "<F000>")]
         [TestCase(5, CommandConverter.Direction.Back, "<B005>")]
         [TestCase(5, CommandConverter.Direction.Back & ~CommandConverter.Direction.Back, "<STOP>")]
+        [TestCase(5, CommandConverter.Direction.Straight | CommandConverter.Direction.Right, "<R050>")]
         public void CommandConverterTest1(int speed, CommandConverter.Direction dir, string expected)
         {
             var converter = new CommandConverter();
