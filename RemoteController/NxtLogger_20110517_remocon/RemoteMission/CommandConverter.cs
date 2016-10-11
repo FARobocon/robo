@@ -15,6 +15,10 @@
             Back = 0x02,
             Left = 0x04,
             Right = 0x08,
+            StraightRight = 0x09,
+            StraightLeft = 0x05,
+            BackRight = 0x0a,
+            BackLeft = 0x06,
         }
         
         /// <summary>
@@ -40,13 +44,13 @@
                 this.robotOutput[1] = Parse('B');
                 this.SetSpeed(speed);
             }
-            else if (direction == Direction.Right)
+            else if (direction == Direction.Right || direction == Direction.StraightRight || direction == Direction.BackRight)
             {
                 //右旋回
                 this.robotOutput[1] = Parse('R');
                 this.SetSpeed(speed);
             }
-            else if (direction == Direction.Left)
+            else if (direction == Direction.Left || direction == Direction.StraightLeft || direction == Direction.BackLeft)
             {
                 //左旋回
                 this.robotOutput[1] = Parse('L');
