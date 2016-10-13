@@ -37,7 +37,7 @@
                 try
                 {
                     // ファイルへ追記
-                    sw.WriteLine(output.ToString());
+                    sw.WriteLine(output.ToString("c"));
                 }
                 catch (Exception ex)
                 {

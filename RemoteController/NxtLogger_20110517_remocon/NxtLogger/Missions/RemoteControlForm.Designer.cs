@@ -82,6 +82,7 @@
             // 
             // commandTimer
             // 
+            this.commandTimer.Interval = 250;
             this.commandTimer.Tick += new System.EventHandler(this.CommandTimerTick);
             // 
             // sendMsgText
@@ -156,6 +157,7 @@
             this.Controls.Add(this.SpeedTrackBar);
             this.Name = "RemoteControlForm";
             this.Text = "RemoteControlForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.RemoteControlFormFormClosed);
             this.Load += new System.EventHandler(this.RemoteControlForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RemoteControlForm_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.RemoteControlForm_KeyUp);

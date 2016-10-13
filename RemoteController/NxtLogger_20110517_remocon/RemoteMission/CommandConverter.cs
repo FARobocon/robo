@@ -5,7 +5,7 @@
 
     public class CommandConverter
     {
-        private RobotOutput robotOutput;
+        public const string NoneCommand = "<NONE>";
 
         [Flags]
         public enum Direction
@@ -20,7 +20,25 @@
             BackRight = 0x0a,
             BackLeft = 0x06,
         }
-        
+
+        public static RobotOutput StartCommand
+        {
+            get
+            {
+                var bytes = System.Text.Encoding.ASCII.GetBytes("<START>");
+                return new RobotOutput(bytes);
+            }
+        }
+
+        public static RobotOutput StopCommand
+        {
+            get
+            {
+                var bytes = System.Text.Encoding.ASCII.GetBytes("<STOP>");
+                return new RobotOutput(bytes);
+            }
+        }
+
         /// <summary>
         /// 速度と方向をコマンドインタフェースに変換する
         /// </summary>
@@ -29,44 +47,41 @@
         /// <returns>RobotOutput</returns>
         public RobotOutput Convert(int speed, Direction direction)
         {
-            this.robotOutput = new RobotOutput();
+            var robotOutput = new RobotOutput();
 
-            this.robotOutput[0] = Parse('<');
+            robotOutput[0] = Parse('<');
             if (direction == Direction.Straight)
             {
                 //直進
-                this.robotOutput[1] = Parse('F');
-                this.SetSpeed(speed);
+                robotOutput[1] = Parse('F');
+                this.SetSpeed(speed, robotOutput);
             }
             else if (direction == Direction.Back)
             {
                 //後退
-                this.robotOutput[1] = Parse('B');
-                this.SetSpeed(speed);
+                robotOutput[1] = Parse('B');
+                this.SetSpeed(speed, robotOutput);
             }
             else if (direction == Direction.Right || direction == Direction.StraightRight || direction == Direction.BackRight)
             {
                 //右旋回
-                this.robotOutput[1] = Parse('R');
-                this.SetSpeed(speed);
+                robotOutput[1] = Parse('R');
+                this.SetSpeed(speed, robotOutput);
             }
             else if (direction == Direction.Left || direction == Direction.StraightLeft || direction == Direction.BackLeft)
             {
                 //左旋回
-                this.robotOutput[1] = Parse('L');
-                this.SetSpeed(speed);
+                robotOutput[1] = Parse('L');
+                this.SetSpeed(speed, robotOutput);
             }
             else
             {
-                //停止
-                this.robotOutput[1] = Parse('S');
-                this.robotOutput[2] = Parse('T');
-                this.robotOutput[3] = Parse('O');
-                this.robotOutput[4] = Parse('P');
+                return new RobotOutput( System.Text.Encoding.ASCII.GetBytes(NoneCommand));
             }
-            this.robotOutput[5] = Parse('>');
 
-            return this.robotOutput;
+            robotOutput[5] = Parse('>');
+
+            return robotOutput;
         }
 
         private static byte Parse(char c)
@@ -75,29 +90,29 @@
             return bytes[0];
         }
 
-        private void SetSpeed(int speed)
+        private void SetSpeed(int speed, RobotOutput robotOutput)
         {
             byte[] outputSpeed = BitConverter.GetBytes(speed);
 
             if (speed<10)
             {
-                this.robotOutput[2] = Parse('0');
-                this.robotOutput[3] = Parse('0');
-                this.robotOutput[4] = Parse(speed.ToString()[0]);
+                robotOutput[2] = Parse('0');
+                robotOutput[3] = Parse('0');
+                robotOutput[4] = Parse(speed.ToString()[0]);
             }
             else if (speed < 100)
             {
-                this.robotOutput[2] = Parse('0');
+                robotOutput[2] = Parse('0');
                 var str = speed.ToString();
-                this.robotOutput[3] = Parse(str[0]);
-                this.robotOutput[4] = Parse(str[1]);
+                robotOutput[3] = Parse(str[0]);
+                robotOutput[4] = Parse(str[1]);
             }
             else
             {
                 var str = speed.ToString();
-                this.robotOutput[2] = Parse(str[0]);
-                this.robotOutput[3] = Parse(str[1]);
-                this.robotOutput[4] = Parse(str[2]);
+                robotOutput[2] = Parse(str[0]);
+                robotOutput[3] = Parse(str[1]);
+                robotOutput[4] = Parse(str[2]);
             }
         }
 

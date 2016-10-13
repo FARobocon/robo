@@ -22,27 +22,23 @@
         public void Init(SendMissionDelegate sendDelegate)
         {
             this.sendMissionDelegate = sendDelegate;
+            this.sendMissionDelegate(CommandConverter.StartCommand);
             this.Show();
             this.commandTimer.Enabled = true;
         }
+
+        /// <summary>
+        /// ロボットの走行パラメータをもとにロボットへの送信コマンドを作成する
+        /// </summary>
+        /// <param name="robotInput">ロボットの走行パラメータ</param>
+        /// <returns>送信コマンド情報</returns>
         public RobotOutput Run(RobotInput robotInput)
         {
             var absSpeed = (byte) Math.Abs(this.SpeedTrackBar.Value);
 
             var converter = new CommandConverter();
 
-            var robotOutput = converter.Convert(absSpeed, this.direction);
-
-            if (LoggingChkBox.Checked)
-            {
-                if (this.logger == null)
-                {
-                    this.logger = new CsvLogger();
-                }
-                this.logger.Append(robotOutput);
-            }
-
-            return robotOutput;
+            return converter.Convert(absSpeed, this.direction);
         }
 
         /// <summary>
@@ -108,15 +104,44 @@
             }
         }
 
+        /// <summary>
+        /// 250msタイマ
+        /// タイマ間隔でロボットにコマンドを送信する
+        /// </summary>
+        /// <param name="sender">未使用</param>
+        /// <param name="e">未使用</param>
         private void CommandTimerTick(object sender, EventArgs e)
         {
+            if (!this.commandTimer.Enabled) return;
+
             var output = this.Run(new RobotInput());
-            this.sendMissionDelegate(output);
             var str = output.ToString("c");
-            if (str != this.sendMsgText.Text)
+
+            if (str != CommandConverter.NoneCommand)
             {
-                this.sendMsgText.Text = str;
+                this.sendMissionDelegate(output);
+
+                if (str != this.sendMsgText.Text)
+                {
+                    this.sendMsgText.Text = str;
+                }
+                if (this.LoggingChkBox.Checked)
+                {
+                    if (this.logger == null)
+                    {
+                        this.logger = new CsvLogger();
+                    }
+                    this.logger.Append(output);
+                }
             }
+            
+            
+        }
+
+        private void RemoteControlFormFormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.commandTimer.Enabled = false;
+            this.sendMissionDelegate(CommandConverter.StopCommand);
         }
 
     }

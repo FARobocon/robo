@@ -123,7 +123,7 @@ namespace NxtLogger
             catch (Exception ex)
             {
                 // フォームにエラー表示
-                textLogFile.Text = "ERROR";
+                this.textLogFile.Text = "ERROR";
 
                 Debug.WriteLine("FILE WRITE ERROR : {0}", ex.ToString());
             }
@@ -133,7 +133,6 @@ namespace NxtLogger
         {
             try
             {
-
                 if (this.port.IsOpen && this.mission != null)
                 {
                     if (output != null)
@@ -143,7 +142,7 @@ namespace NxtLogger
             catch (Exception ex)
             {
                 // フォームにエラー表示
-                textLogFile.Text = "ERROR";
+                this.textLogFile.Text = "ERROR:" + ex.ToString();
 
                 Debug.WriteLine("FILE WRITE ERROR : {0}", ex.ToString());
             }
