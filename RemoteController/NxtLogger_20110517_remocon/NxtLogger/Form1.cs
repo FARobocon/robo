@@ -110,14 +110,15 @@ namespace NxtLogger
 
             System.Threading.Thread.Sleep(150);
 
+            Debug.WriteLine(System.Text.Encoding.ASCII.GetString(mes));
+
             try
             {
                 if (this.port.IsOpen && this.mission != null)
                 {
-                    RobotOutput output = this.mission.Run(this.log.InputParam);
+                    //RobotOutput output = this.mission.Run(this.log.InputParam);
 
-                    if ( output != null )
-                        this.port.Write(output.Data, 0, output.Data.Length);
+                    //this.port.Write(output.Data, 0, output.Data.Length);
                 }
             }
             catch (Exception ex)
@@ -135,8 +136,9 @@ namespace NxtLogger
             {
                 if (this.port.IsOpen && this.mission != null)
                 {
-                    if (output != null)
-                        this.port.Write(output.Data, 0, output.Data.Length);
+                    var text = output.ToString();
+                    this.port.Write(text);
+                    Debug.WriteLine(text);
                 }
             }
             catch (Exception ex)

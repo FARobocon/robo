@@ -9,7 +9,7 @@
     internal class CsvReader
     {
         private List<string> strLines = new List<string>();
-        private int index;
+        //private int index;
 
         public CsvReader(string filename)
         {
@@ -20,21 +20,23 @@
                 {
                     this.strLines.Add(line);
                 }
-                this.index = 1;
+      //          this.index = 1;
             }
         }
 
         public RobotOutput Read()
         {
-            if (this.index < this.strLines.Count)
-            {
-                string[] strline = this.strLines[this.index++].Split(',');
-                RobotOutput output = new RobotOutput();
-                for (int i = 0; i < output.Data.Length; i++)
-                    output[i] = byte.Parse(strline[i]);
-                return output;
-            }
-            return null;
+            throw new NotImplementedException();
+            // 以下旧仕様
+            //if (this.index < this.strLines.Count)
+            //{
+            //    string[] strline = this.strLines[this.index++].Split(',');
+            //    RobotOutput output = new RobotOutput();
+            //    for (int i = 0; i < output.Data.Length; i++)
+            //        output[i] = byte.Parse(strline[i]);
+            //    return output;
+            //}
+            //return null;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿namespace NxtLogger.Missions
 {
+    
     using System;
+    using System.Diagnostics;
     using System.Windows.Forms;
     using MissionInterface;
     using RemoteMission;
@@ -112,13 +114,11 @@
         /// <param name="e">未使用</param>
         private void CommandTimerTick(object sender, EventArgs e)
         {
-            if (!this.commandTimer.Enabled) return;
-
             var output = this.Run(new RobotInput());
-            var str = output.ToString("c");
-
-            if (str != CommandConverter.NoneCommand)
+            if (output.IsValid)
             {
+                var str = output.ToString();
+
                 this.sendMissionDelegate(output);
 
                 if (str != this.sendMsgText.Text)
@@ -134,8 +134,6 @@
                     this.logger.Append(output);
                 }
             }
-            
-            
         }
 
         private void RemoteControlFormFormClosed(object sender, FormClosedEventArgs e)

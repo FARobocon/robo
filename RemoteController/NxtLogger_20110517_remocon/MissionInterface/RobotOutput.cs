@@ -2,54 +2,59 @@
 {
     using System;
 
-    public class RobotOutput
+    public struct RobotOutput
     {
-        private byte[] val = new byte[6]
-        { 
-           (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0
-        };
+        private string strVal;
 
-        public RobotOutput()
+        public RobotOutput(string strVal)
         {
+            this.strVal = strVal;
         }
 
-        public RobotOutput(byte[] data)
+        public static RobotOutput InvalidRobotOutput
         {
-            this.val = new byte[data.Length];
-            data.CopyTo(this.val, 0);
+            get
+            {
+                return new RobotOutput(string.Empty);
+            }
         }
 
         public byte[] Data
         {
             get 
             {
-                var copy = new byte[this.val.Length];
-                this.val.CopyTo(copy, 0);
-                return copy; 
+                if (string.IsNullOrEmpty(this.strVal)) return null;
+                return System.Text.Encoding.ASCII.GetBytes(this.strVal);
             }
         }
 
-        public byte this[int i]
+        public bool IsValid
         {
-            get { return this.val[i]; }
-            set { this.val[i] = value; }
+            get
+            {
+                return !string.IsNullOrEmpty(this.strVal);
+            }
         }
 
         public override string ToString()
         {
-            string str = string.Empty;
-            foreach (byte v in this.val)
-            {
-                str += v.ToString("D") + ",";
-            }
-            return str;
+            return this.ToString("c");
         }
 
         public string ToString(string fmt)
         {
-            if (fmt == "c")
+            if (fmt.ToLower() == "c")
             {
-                return System.Text.Encoding.ASCII.GetString(this.Data);
+                return this.strVal;
+            }
+            if (fmt.ToLower() == "d")
+            {
+                string str = string.Empty;
+                foreach (byte v in this.Data)
+                {
+                    str += v.ToString("D") + ",";
+                }
+                return str;
             }
             return string.Empty;
         }

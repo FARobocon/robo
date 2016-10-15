@@ -44,7 +44,7 @@
 
         public RobotOutput Run(RobotInput robotInput)
         {
-            return this.reader != null ? this.reader.Read() : null;
+            return this.reader != null ? this.reader.Read() : new RobotOutput(string.Empty);
         }
     }
 }
