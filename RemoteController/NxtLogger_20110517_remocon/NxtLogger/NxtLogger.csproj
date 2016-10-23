@@ -112,6 +112,13 @@
       <DependentUpon>RestoredControlForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Missions\RestoredMission.cs" />
+    <Compile Include="PortControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PortControl.Designer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+      <DependentUpon>PortControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="PortNoComparer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -126,6 +133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Missions\RestoredControlForm.resx">
       <DependentUpon>RestoredControlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PortControl.resx">
+      <DependentUpon>PortControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

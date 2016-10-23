@@ -145,46 +145,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;btnQuit.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="chkConnect.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms">
-    <value>Button</value>
-  </data>
-  <data name="chkConnect.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="chkConnect.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arial Narrow, 9pt</value>
-  </data>
-  <data name="chkConnect.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkConnect.Location" type="System.Drawing.Point, System.Drawing">
-    <value>353, 7</value>
-  </data>
-  <data name="chkConnect.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 26</value>
-  </data>
-  <data name="chkConnect.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="chkConnect.Text" xml:space="preserve">
-    <value>CONNECT</value>
-  </data>
-  <data name="chkConnect.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;chkConnect.Name" xml:space="preserve">
-    <value>chkConnect</value>
-  </data>
-  <data name="&gt;&gt;chkConnect.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkConnect.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;chkConnect.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>6</value>
   </data>
   <data name="boxDataView.Font" type="System.Drawing.Font, System.Drawing">
     <value>ＭＳ ゴシック, 9pt</value>
@@ -214,28 +175,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;boxDataView.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="portNoBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 12</value>
-  </data>
-  <data name="portNoBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 20</value>
-  </data>
-  <data name="portNoBox.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;portNoBox.Name" xml:space="preserve">
-    <value>portNoBox</value>
-  </data>
-  <data name="&gt;&gt;portNoBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;portNoBox.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;portNoBox.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>5</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -268,7 +208,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>4</value>
   </data>
   <data name="labelLogFile.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -298,7 +238,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;labelLogFile.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="textLogFile.Location" type="System.Drawing.Point, System.Drawing">
     <value>76, 240</value>
@@ -322,88 +262,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;textLogFile.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="labelCTS.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labelCTS.Font" type="System.Drawing.Font, System.Drawing">
-    <value>MS UI Gothic, 9pt</value>
-  </data>
-  <data name="labelCTS.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="labelCTS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>272, 12</value>
-  </data>
-  <data name="labelCTS.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
-  </data>
-  <data name="labelCTS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>33, 18</value>
-  </data>
-  <data name="labelCTS.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="labelCTS.Text" xml:space="preserve">
-    <value>CTS</value>
-  </data>
-  <data name="labelCTS.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;labelCTS.Name" xml:space="preserve">
-    <value>labelCTS</value>
-  </data>
-  <data name="&gt;&gt;labelCTS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labelCTS.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;labelCTS.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="labelDSR.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labelDSR.Font" type="System.Drawing.Font, System.Drawing">
-    <value>MS UI Gothic, 9pt</value>
-  </data>
-  <data name="labelDSR.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="missionButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
-  </data>
-  <data name="labelDSR.Location" type="System.Drawing.Point, System.Drawing">
-    <value>311, 12</value>
-  </data>
-  <data name="labelDSR.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
-  </data>
-  <data name="labelDSR.Size" type="System.Drawing.Size, System.Drawing">
-    <value>34, 18</value>
-  </data>
-  <data name="labelDSR.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="labelDSR.Text" xml:space="preserve">
-    <value>DSR</value>
-  </data>
-  <data name="labelDSR.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;labelDSR.Name" xml:space="preserve">
-    <value>labelDSR</value>
-  </data>
-  <data name="&gt;&gt;labelDSR.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labelDSR.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;labelDSR.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="missionButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>246, 240</value>
@@ -427,6 +289,27 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;missionButton.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="portControl1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1, 0</value>
+  </data>
+  <data name="portControl1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>422, 41</value>
+  </data>
+  <data name="portControl1.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;portControl1.Name" xml:space="preserve">
+    <value>portControl1</value>
+  </data>
+  <data name="&gt;&gt;portControl1.Type" xml:space="preserve">
+    <value>NxtLogger.PortControl, NxtLogger, Version=1.0.2.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;portControl1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;portControl1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -438,14 +321,11 @@
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>435, 274</value>
   </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="$this.Text" xml:space="preserve">
     <value>NxtLogger</value>
-  </data>
-  <data name="&gt;&gt;timer1.Name" xml:space="preserve">
-    <value>timer1</value>
-  </data>
-  <data name="&gt;&gt;timer1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Form1</value>

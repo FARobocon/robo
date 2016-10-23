@@ -67,37 +67,6 @@ namespace NxtLogger
         public delegate void DlgLogOutput(byte[] mes);
 
         /// <summary>
-        /// シリアルポート名をシステムより取得しコンボボックスに反映
-        /// </summary>
-        private void PortNoLoad()
-        {
-            // ソート済みのポート名一覧を取得
-            string[] portNames = LogPort.GetSortedPortNames();
-
-            // 取得したシリアル・ポート名をコンボボックスにセット
-            portNoBox.Items.Clear();
-            foreach (string port in portNames)
-            {
-                this.portNoBox.Items.Add(port);
-            }
-
-            if (portNames.Length > 0)
-            {
-                // コンボボックスのデフォルト選択をセット
-                this.portNoBox.Text = portNames[0];
-            }
-            else
-            {
-                // CONNECTボタンを無効状態
-                chkConnect.Enabled = false;
-
-                // コンボボックスを無効状態
-                this.portNoBox.Enabled = false;
-            }
-        }
-
-
-        /// <summary>
         /// （メインスレッドの）ログデータ受信
         /// </summary>
         /// <param name="mes">データ</param>
@@ -162,11 +131,43 @@ namespace NxtLogger
         /// <param name="e">イベント引数</param>
         private void Form1_Load(object sender, EventArgs e)
         {
-            // シリアルポート番号をメニューにセット
-            this.PortNoLoad();
-
             // ポートインスタンス生成
             this.port = new LogPort();
+
+            this.portControl1.Port = this.port;
+
+            this.portControl1.ConnectEvent += (result, str) =>
+                {
+                    if (!result) return;
+
+                    DateTime timeNow = DateTime.Now;    //  現在日時の取得
+
+                    // 日時よりログファイル名作成
+                    this.logFileName = timeNow.ToString("yyyyMMdd_HHmmss") + ".csv";
+
+                    // フォームにログファイル名を表示
+                    this.textLogFile.Text = this.logFileName;
+
+                    // ログファイル(*.csv)の一行目にタイトル挿入
+                    using (StreamWriter sw = new StreamWriter(new FileStream(this.logFileName, FileMode.Append)))
+                    {
+                        try
+                        {
+                            // ファイルへ追記
+                            sw.WriteLine("Time,Data1,Data2,Battery,Motor Rev A,Motor Rev B,Motor Rev C,ADC S1,ADC S2,ADC S3,ADC S4,I2C");
+                        }
+                        catch (Exception ex)
+                        {
+                            // フォームにエラー表示
+                            this.textLogFile.Text = "ERROR";
+
+                            Debug.WriteLine("FILE WRITE ERROR : {0}", ex.ToString());
+                        }
+                    }
+
+                    // ログメッセージ作成
+                    this.log = new LogMessege(this.dlgAppendMessege);
+                };
 
             // シリアルポート受信イベントハンドラー登録
             this.port.DataReceived += new SerialDataReceivedEventHandler(this.SerialPortDataReceived);
@@ -286,9 +287,6 @@ namespace NxtLogger
             }
         }
 
-
-        
-
         /// <summary>
         /// シリアルポート受信イベントハンドラ
         /// </summary>
@@ -315,115 +313,6 @@ namespace NxtLogger
                 {
                     Debug.WriteLine("UNEXPECTED EXCEPTION : {0}", ex.ToString());
                 }
-            }
-        }
-
-
-
-        /// <summary>
-        /// １秒間隔のタイマーハンドラー
-        /// </summary>
-        /// <param name="sender">sender</param>
-        /// <param name="e">event</param>
-        private void Timer1Tick(object sender, EventArgs e)
-        {
-            // ポート状態監視
-            if (this.port != null && this.port.IsOpen)
-            {
-                // ハードウェアフロー制御端子(CTS:Clear To Send)監視
-                if (this.port.CtsHolding)
-                {
-                    // ラベル文字をアクティブ表示
-                    this.labelCTS.ForeColor = System.Drawing.SystemColors.ControlText;
-                }
-                else
-                {
-                    // ラベル文字を非アクティブ表示
-                    this.labelCTS.ForeColor = System.Drawing.SystemColors.ControlDark;
-                }
-
-                // ハードウェアフロー制御端子(DSR:Data Set Ready)監視
-                if (this.port.DsrHolding)
-                {
-                    // ラベル文字をアクティブ表示
-                    this.labelDSR.ForeColor = System.Drawing.SystemColors.ControlText;
-                }
-                else
-                {
-                    // ラベル文字を非アクティブ表示
-                    this.labelDSR.ForeColor = System.Drawing.SystemColors.ControlDark;
-                }
-
-                if (this.port.CtsHolding != true || this.port.DsrHolding != true)
-                {
-                    // CONNECTボタンをアンチェック状態
-                    this.chkConnect.Checked = false;
-                }
-            }
-            else
-            {
-                // ラベル文字を非アクティブ表示
-                this.labelCTS.ForeColor = System.Drawing.SystemColors.ControlDark;
-                this.labelDSR.ForeColor = System.Drawing.SystemColors.ControlDark;
-            }
-        }
-
-
-        /// <summary>
-        /// CONNECTボタン（チェックボックス）押下時の処理
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ChkConnectCheckedChanged(object sender, EventArgs e)
-        {
-            if (this.chkConnect.Checked)
-            {
-                DateTime timeNow = DateTime.Now;    //  現在日時の取得
-
-                // シリアルポート番号設定
-                this.port.Connect(this.portNoBox.Text);
-
-                if (!this.port.IsOpen)
-                {
-                    MessageBox.Show("接続失敗");
-                }
-
-                // COMポート番号選択COMBO BOXを無効化
-                this.portNoBox.Enabled = false;
-
-                // 日時よりログファイル名作成
-                this.logFileName = timeNow.ToString("yyyyMMdd_HHmmss") + ".csv";
-
-                // フォームにログファイル名を表示
-                this.textLogFile.Text = this.logFileName;
-
-                // ログファイル(*.csv)の一行目にタイトル挿入
-                using (StreamWriter sw = new StreamWriter(new FileStream(this.logFileName, FileMode.Append)))
-                {
-                    try
-                    {
-                        // ファイルへ追記
-                        sw.WriteLine("Time,Data1,Data2,Battery,Motor Rev A,Motor Rev B,Motor Rev C,ADC S1,ADC S2,ADC S3,ADC S4,I2C");
-                    }
-                    catch (Exception ex)
-                    {
-                        // フォームにエラー表示
-                        this.textLogFile.Text = "ERROR";
-
-                        Debug.WriteLine("FILE WRITE ERROR : {0}", ex.ToString());
-                    }
-                }
-
-                // ログメッセージ作成
-                this.log = new LogMessege(this.dlgAppendMessege);
-            }
-            else
-            {
-                // ポートの切断処理
-                this.port.Disconnect();
-
-                // COMポート番号選択COMBO BOXを有効化
-                this.portNoBox.Enabled = true;
             }
         }
 
