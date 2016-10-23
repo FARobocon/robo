@@ -35,6 +35,7 @@ typedef enum {								/* 走行状態						*/
 typedef struct {
 	eRunState	runStatus;					/* 走行状態						*/
 	U16		count100ms;						/* 100ms計測カウンタ			*/
+	U16		waitTimer;						/* 待ち用タイマ（4ms毎に減算）	*/
 	U16		gyroOffset;						/* ジャイロオフセット			*/
 	S8		forward;						/* 前後進命令					*/
 											/* (-100～+100 +:前/-:後)		*/
@@ -99,6 +100,7 @@ void CTRL_initialize(void)
 	nxt_motor_set_count(PORT_WHEEL_R, 0);	/* 右モータエンコーダリセット	*/
 
 	sCtrl.count100ms = 0;
+	sCtrl.waitTimer  = 0;
 	sCtrl.forward = 0;
 	sCtrl.turn    = 0;
 	sCtrl.runStatus = STATE_CALIB;
@@ -173,6 +175,9 @@ void CTRL_execute(void)
 			run();
 			if((TOUCH_isPressed() == true) || (stopflg == true)){
 				beep();
+				TAIL_setPosition(TAIL_ANGLE_STAND_UP - 20);
+				sCtrl.gyroOffset -= 100;	/* ジャイロオフセットを操作し、後方に倒す */
+				sCtrl.waitTimer = 10;		/* 待ち用タイマに40msをセット */
 				sCtrl.runStatus = STATE_STOPREADY;
 			}
 			break;
@@ -180,14 +185,13 @@ void CTRL_execute(void)
 			sCtrl.forward = 0;
 			sCtrl.turn    = 0;
 			run();
-			TAIL_setPosition(TAIL_ANGLE_STAND_UP - 20);
-			sCtrl.runStatus = STATE_WAIT;
+			if(sCtrl.waitTimer == 0){		/* 待ち用タイママイムアップ */
+				sCtrl.gyroOffset += 100;	/* ジャイロオフセットを戻す */
+				sCtrl.runStatus = STATE_STOP;
+			}
 			break;
 		case STATE_STOP:
-			sCtrl.gyroOffset -= 20;
-			run();
-			sCtrl.gyroOffset += 20;
-			sCtrl.runStatus = STATE_WAIT;
+			stop();
 			break;
 		default:
 			sCtrl.runStatus = STATE_STOP;
@@ -202,6 +206,11 @@ void CTRL_execute(void)
 		sCtrl.count100ms = 0;
 		/* タッチセンサの押下状態を更新	*/
 		TOUCH_updateState();
+	}
+
+	/* 待ち用タイマ更新 */
+	if(sCtrl.waitTimer > 0){
+		sCtrl.waitTimer--;
 	}
 }
 
