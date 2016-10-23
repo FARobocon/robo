@@ -40,6 +40,7 @@
             this.portControl1 = new NxtLogger.PortControl();
             this.debugTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,7 +55,7 @@
             // LoggingChkBox
             // 
             this.LoggingChkBox.AutoSize = true;
-            this.LoggingChkBox.Location = new System.Drawing.Point(385, 163);
+            this.LoggingChkBox.Location = new System.Drawing.Point(325, 213);
             this.LoggingChkBox.Name = "LoggingChkBox";
             this.LoggingChkBox.Size = new System.Drawing.Size(44, 16);
             this.LoggingChkBox.TabIndex = 3;
@@ -136,11 +137,22 @@
             this.label6.TabIndex = 13;
             this.label6.Text = "デバッグ";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Location = new System.Drawing.Point(159, 115);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(54, 26);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "(d) Start \r\n(p) Stop";
+            // 
             // RemoteControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(441, 245);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.debugTextBox);
             this.Controls.Add(this.portControl1);
@@ -176,6 +188,7 @@
         private PortControl portControl1;
         private System.Windows.Forms.TextBox debugTextBox;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label4;
 
     }
 }

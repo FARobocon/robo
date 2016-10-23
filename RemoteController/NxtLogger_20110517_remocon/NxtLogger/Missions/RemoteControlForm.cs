@@ -7,17 +7,12 @@
     using MissionInterface;
     using RemoteMission;
 
-    public partial class RemoteControlForm : Form, IMissionInterface
+    public partial class RemoteControlForm : Form
     {
         private CommandConverter.Direction direction = CommandConverter.Direction.None;
         private CsvLogger logger = null;
         // シリアルポート
         private LogPort port = new LogPort();
-
-        /// <summary>
-        /// コマンドを送信するためのデリゲート
-        /// </summary>
-        private SendMissionDelegate sendMissionDelegate;
 
         public RemoteControlForm()
         {
@@ -34,14 +29,6 @@
 
         // デリゲート宣言
         public delegate void DlgLogOutput(byte[] mes);
-
-        public void Init(SendMissionDelegate sendDelegate)
-        {
-            this.sendMissionDelegate = sendDelegate;
-            this.sendMissionDelegate(CommandConverter.StartCommand);
-            this.Show();
-            
-        }
 
         /// <summary>
         /// ロボットの走行パラメータをもとにロボットへの送信コマンドを作成する
@@ -223,8 +210,6 @@
         private void RemoteControlFormFormClosed(object sender, FormClosedEventArgs e)
         {
             this.commandTimer.Enabled = false;
-            if(this.sendMissionDelegate!=null)
-                this.sendMissionDelegate(CommandConverter.StopCommand);
             // シリアルポートインスタンス破棄
             if (this.port != null) this.port.Dispose();
             // アプリケーション終了処理
