@@ -118,10 +118,18 @@
                 var str = output.ToString();
 
                 this.SendCommand(output);
+            }
+        }
 
-                if (str != this.sendMsgText.Text)
+        private void SendCommand(RobotOutput output)
+        {
+            try
+            {
+                var text = output.ToString();
+
+                if (this.port.IsOpen)
                 {
-                    this.sendMsgText.Text = str;
+                    this.port.Write(text);
                 }
                 if (this.LoggingChkBox.Checked)
                 {
@@ -131,19 +139,8 @@
                     }
                     this.logger.Append(output);
                 }
-            }
-        }
-
-        private void SendCommand(RobotOutput output)
-        {
-            try
-            {
-                if (this.port.IsOpen)
-                {
-                    var text = output.ToString();
-                    this.port.Write(text);
-                    Debug.WriteLine(text);
-                }
+                Debug.WriteLine(text);
+                this.sendMsgText.Text = text;
             }
             catch (Exception ex)
             {
