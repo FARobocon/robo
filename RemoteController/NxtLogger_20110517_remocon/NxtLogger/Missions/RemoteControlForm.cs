@@ -82,6 +82,9 @@
 
             // 描画される目盛りの刻みを設定
             SpeedTrackBar.TickFrequency = 10;
+
+            // スピードの数値の初期化
+            SpeedValueLabel.Text = SpeedTrackBar.Value.ToString();
         }
 
         private void RemoteControlForm_KeyUp(object sender, KeyEventArgs e)
@@ -213,5 +216,15 @@
             Application.Exit();
         }
 
+        // スピードの数値更新
+        private void SpeedTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            this.SpeedValueLabel.Text = this.SpeedTrackBar.Value.ToString();
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
