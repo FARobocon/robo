@@ -181,7 +181,6 @@
             this.label8.Size = new System.Drawing.Size(17, 18);
             this.label8.TabIndex = 17;
             this.label8.Text = "0";
-            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // portControl1
             // 

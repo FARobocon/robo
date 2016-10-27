@@ -221,10 +221,5 @@
         {
             this.SpeedValueLabel.Text = this.SpeedTrackBar.Value.ToString();
         }
-
-        private void label8_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
