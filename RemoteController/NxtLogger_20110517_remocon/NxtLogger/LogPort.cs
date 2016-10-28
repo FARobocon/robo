@@ -22,7 +22,7 @@ namespace NxtLogger
     using System.IO.Ports;
     using System.Text.RegularExpressions;
 
-    internal class LogPort : SerialPort
+    public class LogPort : SerialPort
     {
         /// <summary>
         /// SerialPortコンストラクタ
