@@ -9,8 +9,10 @@
 
     public partial class RemoteControlForm : Form
     {
+        private const int Speedstep = 5;
         private CommandConverter.Direction direction = CommandConverter.Direction.None;
         private CsvLogger logger = null;
+        private bool increaseFLG = false;
         // シリアルポート
         private LogPort port = new LogPort();
 
@@ -67,6 +69,9 @@
                 case Keys.P:
                     this.SendCommand(CommandConverter.StopCommand);
                     break;
+                case Keys.N:
+                    this.increaseFLG = true;
+                    break;
             }
         }
 
@@ -99,6 +104,8 @@
                     break;
                 case Keys.A: this.direction &= ~CommandConverter.Direction.Left;
                     break;
+                case Keys.N: this.increaseFLG = false;
+                    break;
             }
         }
 
@@ -110,6 +117,7 @@
         /// <param name="e">未使用</param>
         private void CommandTimerTick(object sender, EventArgs e)
         {
+            this.SetSpeed();
             var absSpeed = (byte)Math.Abs(this.SpeedTrackBar.Value);
 
             var converter = new CommandConverter();
@@ -122,6 +130,32 @@
 
                 this.SendCommand(output);
             }
+        }
+
+        /// <summary>
+        /// ボタン押下有無でスピードの数値を変更する
+        /// </summary>                 
+        private void SetSpeed()
+        {
+            var speedvalue = this.SpeedTrackBar.Value;
+
+            if (this.increaseFLG)
+            {
+                speedvalue += RemoteControlForm.Speedstep;
+                if (speedvalue > this.SpeedTrackBar.Maximum)
+                {
+                    speedvalue = this.SpeedTrackBar.Maximum;
+                }
+            }
+            else
+            {
+                speedvalue -= RemoteControlForm.Speedstep;
+                if( speedvalue < this.SpeedTrackBar.Minimum)
+                {
+                    speedvalue = this.SpeedTrackBar.Minimum;
+                }
+            }
+            this.SpeedTrackBar.Value = speedvalue;
         }
 
         private void SendCommand(RobotOutput output)
