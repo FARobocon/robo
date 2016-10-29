@@ -55,7 +55,7 @@
             this.SpeedTrackBar.Name = "SpeedTrackBar";
             this.SpeedTrackBar.Size = new System.Drawing.Size(595, 69);
             this.SpeedTrackBar.TabIndex = 0;
-            this.SpeedTrackBar.ValueChanged += new System.EventHandler(this.SpeedTrackBar_ValueChanged);
+            this.SpeedTrackBar.ValueChanged += new System.EventHandler(this.SpeedTrackBarValueChanged);
             // 
             // LoggingChkBox
             // 

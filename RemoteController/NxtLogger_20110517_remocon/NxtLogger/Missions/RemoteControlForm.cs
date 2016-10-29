@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.IO.Ports;
+    using System.Linq;
     using System.Windows.Forms;
     using MissionInterface;
     using RemoteMission;
@@ -11,6 +12,7 @@
     {
         private const int Speedstep = 5;
         private CommandConverter.Direction direction = CommandConverter.Direction.None;
+        private CommandConverter converter = new CommandConverter();
         private CsvLogger logger = null;
         private bool increaseFLG = false;
         // シリアルポート
@@ -31,20 +33,6 @@
 
         // デリゲート宣言
         public delegate void DlgLogOutput(byte[] mes);
-
-        /// <summary>
-        /// ロボットの走行パラメータをもとにロボットへの送信コマンドを作成する
-        /// </summary>
-        /// <param name="robotInput">ロボットの走行パラメータ</param>
-        /// <returns>送信コマンド情報</returns>
-        public RobotOutput Run(RobotInput robotInput)
-        {
-            var absSpeed = (byte) Math.Abs(this.SpeedTrackBar.Value);
-
-            var converter = new CommandConverter();
-
-            return converter.Convert(absSpeed, this.direction);
-        }
 
         /// <summary>
         /// キーボードで走行方向（WSZAを使用）を入力
@@ -120,12 +108,17 @@
             this.SetSpeed();
             var absSpeed = (byte)Math.Abs(this.SpeedTrackBar.Value);
 
-            var converter = new CommandConverter();
-
-            var output = converter.Convert(absSpeed, this.direction);
+            var output = this.converter.Convert(absSpeed, this.direction);
 
             if (output.IsValid)
             {
+                // 同じコマンドを繰り返し送らないよう、履歴をもとに重複送信を抑制する
+                // コマンドが送信中に喪失するリスクも考慮し、5件以上同じコマンドであった場合に送信抑制する
+                if (this.converter.History.All(hst => hst == output))
+                {
+                    return;
+                }
+
                 var str = output.ToString();
 
                 this.SendCommand(output);
@@ -141,19 +134,11 @@
 
             if (this.increaseFLG)
             {
-                speedvalue += RemoteControlForm.Speedstep;
-                if (speedvalue > this.SpeedTrackBar.Maximum)
-                {
-                    speedvalue = this.SpeedTrackBar.Maximum;
-                }
+                speedvalue = 30; //暫定
             }
             else
             {
-                speedvalue -= RemoteControlForm.Speedstep;
-                if( speedvalue < this.SpeedTrackBar.Minimum)
-                {
-                    speedvalue = this.SpeedTrackBar.Minimum;
-                }
+                speedvalue = 0;
             }
             this.SpeedTrackBar.Value = speedvalue;
         }
@@ -251,7 +236,7 @@
         }
 
         // スピードの数値更新
-        private void SpeedTrackBar_ValueChanged(object sender, EventArgs e)
+        private void SpeedTrackBarValueChanged(object sender, EventArgs e)
         {
             this.SpeedValueLabel.Text = this.SpeedTrackBar.Value.ToString();
         }

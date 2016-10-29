@@ -133,6 +133,10 @@ void CTRL_execute(void)
 		else if(cmd == COMM_CMD_LR){			/* ¶‰Eù‰ñ					*/
 			sCtrl.turn = value;
 		}
+		else if(cmd == COMM_CMD_ZERO){			/* ‘¬“xƒ[ƒ					*/
+			sCtrl.turn = value;
+			sCtrl.forward = value;
+		}
 	}
 
 	/* ó‘Ô•Êˆ— */

@@ -17,7 +17,7 @@
 #define	COMM_CMD_STOP		(2)					/* 走行停止					*/
 #define	COMM_CMD_FB			(3)					/* 前後進					*/
 #define	COMM_CMD_LR			(4)					/* 左右旋回					*/
-
+#define	COMM_CMD_ZERO		(5)					/* 速度0					*/
 
 /****************************************************************************/
 /* クラス操作(Public)														*/
