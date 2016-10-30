@@ -1,0 +1,12 @@
+#!/bin/sh
+
+while [ 1 ] ; do
+      count=`/usr/bin/pgrep -x -c rfcomm`
+      if [ $count -eq 0 ];
+      then
+	  sudo /usr/bin/rfcomm listen /dev/rfcomm0 22 &
+	  sleep 2
+      else
+	  sleep 5
+      fi
+done

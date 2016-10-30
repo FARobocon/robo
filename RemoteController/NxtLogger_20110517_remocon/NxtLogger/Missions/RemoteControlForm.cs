@@ -1,33 +1,34 @@
 ﻿namespace NxtLogger.Missions
 {
-    
     using System;
     using System.Diagnostics;
+    using System.IO.Ports;
     using System.Windows.Forms;
     using MissionInterface;
     using RemoteMission;
 
-    public partial class RemoteControlForm : Form, IMissionInterface
+    public partial class RemoteControlForm : Form
     {
         private CommandConverter.Direction direction = CommandConverter.Direction.None;
         private CsvLogger logger = null;
-        /// <summary>
-        /// コマンドを送信するためのデリゲート
-        /// </summary>
-        private SendMissionDelegate sendMissionDelegate;
+        // シリアルポート
+        private LogPort port = new LogPort();
 
         public RemoteControlForm()
         {
             this.InitializeComponent();
-        }
-
-        public void Init(SendMissionDelegate sendDelegate)
-        {
-            this.sendMissionDelegate = sendDelegate;
-            this.sendMissionDelegate(CommandConverter.StartCommand);
-            this.Show();
+            this.portControl1.Port = this.port;
+            this.portControl1.ConnectEvent += (result, portNum) =>
+                {
+                    this.debugTextBox.Text = "Connected.";
+                };
+            // シリアルポート受信イベントハンドラー登録
+            this.port.DataReceived += new SerialDataReceivedEventHandler(this.SerialPortDataReceived);
             this.commandTimer.Enabled = true;
         }
+
+        // デリゲート宣言
+        public delegate void DlgLogOutput(byte[] mes);
 
         /// <summary>
         /// ロボットの走行パラメータをもとにロボットへの送信コマンドを作成する
@@ -60,6 +61,12 @@
                     break;
                 case Keys.A: this.direction |= CommandConverter.Direction.Left; 
                     break;
+                case Keys.D:
+                    this.SendCommand(CommandConverter.StartCommand);
+                    break;
+                case Keys.P:
+                    this.SendCommand(CommandConverter.StopCommand);
+                    break;
             }
         }
 
@@ -76,19 +83,8 @@
             // 描画される目盛りの刻みを設定
             SpeedTrackBar.TickFrequency = 10;
 
-            // 最小値、最大値を設定
-            TailTrackBar.Minimum = 50;
-            TailTrackBar.Maximum = 120;
-
-            // 初期値を設定
-            TailTrackBar.Value = 106;
-
-        }
-
-        private void TailResetButton_Click(object sender, EventArgs e)
-        {
-            // 初期値を設定
-            TailTrackBar.Value = 106;
+            // スピードの数値の初期化
+            SpeedValueLabel.Text = SpeedTrackBar.Value.ToString();
         }
 
         private void RemoteControlForm_KeyUp(object sender, KeyEventArgs e)
@@ -107,23 +103,36 @@
         }
 
         /// <summary>
-        /// 250msタイマ
+        /// 100msタイマ
         /// タイマ間隔でロボットにコマンドを送信する
         /// </summary>
         /// <param name="sender">未使用</param>
         /// <param name="e">未使用</param>
         private void CommandTimerTick(object sender, EventArgs e)
         {
-            var output = this.Run(new RobotInput());
+            var absSpeed = (byte)Math.Abs(this.SpeedTrackBar.Value);
+
+            var converter = new CommandConverter();
+
+            var output = converter.Convert(absSpeed, this.direction);
+
             if (output.IsValid)
             {
                 var str = output.ToString();
 
-                this.sendMissionDelegate(output);
+                this.SendCommand(output);
+            }
+        }
 
-                if (str != this.sendMsgText.Text)
+        private void SendCommand(RobotOutput output)
+        {
+            try
+            {
+                var text = output.ToString();
+
+                if (this.port.IsOpen)
                 {
-                    this.sendMsgText.Text = str;
+                    this.port.Write(text);
                 }
                 if (this.LoggingChkBox.Checked)
                 {
@@ -133,14 +142,84 @@
                     }
                     this.logger.Append(output);
                 }
+                Debug.WriteLine(text);
+                this.sendMsgText.Text = text;
+            }
+            catch (Exception ex)
+            {
+                // フォームにエラー表示
+                this.sendMsgText.Text = "COMMAND ERROR:" + ex.ToString();
+
+                Debug.WriteLine("FILE WRITE ERROR : {0}", ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// （メインスレッドの）ログデータ受信
+        /// </summary>
+        /// <param name="mes">データ</param>
+        private void MessegeReceive(byte[] mes)
+        {
+            var txt = System.Text.Encoding.ASCII.GetString(mes);
+
+            try
+            {
+                if (this.port.IsOpen )
+                {
+                    this.debugTextBox.Text = "Receive:" + txt;
+                }
+            }
+            catch (Exception ex)
+            {
+                // フォームにエラー表示
+                this.debugTextBox.Text = "RECEIVE ERROR:" + ex.ToString();
+
+                Debug.WriteLine("FILE WRITE ERROR : {0}", ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// シリアルポート受信イベントハンドラ
+        /// </summary>
+        /// <param name="sender">センダー</param>
+        /// <param name="e">イベント引数</param>
+        private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            DlgLogOutput dlgByteOut = new DlgLogOutput(this.MessegeReceive);
+
+            // データ受信バッファ
+            var buf = new byte[this.port.BytesToRead];
+
+            if (buf.Length > 0)
+            {
+                try
+                {
+                    // シリアルポートより受信
+                    this.port.Read(buf, 0, buf.Length);
+
+                    // 受信データをメインスレッドへ
+                    this.BeginInvoke(dlgByteOut, buf);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("UNEXPECTED EXCEPTION : {0}", ex.ToString());
+                }
             }
         }
 
         private void RemoteControlFormFormClosed(object sender, FormClosedEventArgs e)
         {
             this.commandTimer.Enabled = false;
-            this.sendMissionDelegate(CommandConverter.StopCommand);
+            // シリアルポートインスタンス破棄
+            if (this.port != null) this.port.Dispose();
+            // アプリケーション終了処理
+            Application.Exit();
         }
 
+        // スピードの数値更新
+        private void SpeedTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            this.SpeedValueLabel.Text = this.SpeedTrackBar.Value.ToString();
+        }
     }
 }
