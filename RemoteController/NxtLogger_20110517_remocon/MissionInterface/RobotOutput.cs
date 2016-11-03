@@ -2,7 +2,7 @@
 {
     using System;
 
-    public struct RobotOutput
+    public struct RobotOutput : IEquatable<RobotOutput>
     {
         private string strVal;
 
@@ -36,6 +36,16 @@
             }
         }
 
+        public static bool operator ==(RobotOutput left, RobotOutput right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(RobotOutput left, RobotOutput right)
+        {
+            return !left.Equals(right);
+        }
+
         public override string ToString()
         {
             return this.ToString("c");
@@ -57,6 +67,27 @@
                 return str;
             }
             return string.Empty;
+        }
+
+        public bool Equals(RobotOutput other)
+        {
+            return this.strVal == other.strVal;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (object.ReferenceEquals(obj, null)) return false;
+
+            if (object.ReferenceEquals(this, obj)) return true;
+
+            if (this.GetType() != obj.GetType()) return false;
+
+            return this.Equals((RobotOutput) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

@@ -1,11 +1,18 @@
 ﻿namespace RemoteMission
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using MissionInterface;
 
+    public delegate int SpeedMapper(CommandConverter.Direction dir, int speed);
+
     public class CommandConverter
     {
+        private const int QueueSize = 5;
+        private Queue<RobotOutput> history = new Queue<RobotOutput>();
+        private SpeedMapper speedMapper = (dir, speed) => speed;
+
         [Flags]
         public enum Direction
         {
@@ -14,10 +21,10 @@
             Back = 0x02,
             Left = 0x04,
             Right = 0x08,
-            StraightRight = 0x09,
-            StraightLeft = 0x05,
-            BackRight = 0x0a,
-            BackLeft = 0x06,
+            StraightRight = Straight | Right,
+            StraightLeft = Straight | Left,
+            BackRight = Back | Right,
+            BackLeft = Back | Left,
         }
 
         public static RobotOutput StartCommand
@@ -36,6 +43,25 @@
             }
         }
 
+        public SpeedMapper SpeedMap
+        {
+            set
+            {
+                this.speedMapper = value;
+            }
+        }
+
+        /// <summary>
+        /// コマンド生成履歴
+        /// </summary>
+        public IEnumerable<RobotOutput> History
+        {
+            get
+            {
+                return this.history;
+            }
+        }
+
         /// <summary>
         /// 速度と方向をコマンドインタフェースに変換する
         /// </summary>
@@ -44,29 +70,46 @@
         /// <returns>RobotOutput</returns>
         public RobotOutput Convert(int speed, Direction direction)
         {
-            if (direction == Direction.Straight)
+            var output = this.ConvertBase(speed, direction);
+            if( QueueSize < this.history.Count)
             {
-                //直進
-                return new RobotOutput(this.SetSpeed(speed,"F"));
+                this.history.Dequeue();
             }
-            else if (direction == Direction.Back)
-            {
-                //後退
-                return new RobotOutput(this.SetSpeed(speed, "B"));
-            }
-            else if (direction == Direction.Right || direction == Direction.StraightRight || direction == Direction.BackRight)
-            {
-                //右旋回
-                return new RobotOutput(this.SetSpeed(speed, "R"));
-            }
-            else if (direction == Direction.Left || direction == Direction.StraightLeft || direction == Direction.BackLeft)
-            {
-                //左旋回
-                return new RobotOutput(this.SetSpeed(speed, "L"));
-            }
-            return RobotOutput.InvalidRobotOutput;
+            this.history.Enqueue(output);
+            return output;
         }
 
+        public RobotOutput ConvertBase(int speed, Direction direction)
+        {
+            if (HasFlags(direction, Direction.Right))
+            {
+                //右旋回
+                return new RobotOutput(this.SetSpeed(this.speedMapper(Direction.Right, speed), "R"));
+            }
+            else if (HasFlags(direction, Direction.Left))
+            {
+                //左旋回
+                return new RobotOutput(this.SetSpeed(this.speedMapper(Direction.Left, speed), "L"));
+            }
+            else if (HasFlags(direction, Direction.Straight))
+            {
+                //直進
+                return new RobotOutput(this.SetSpeed(this.speedMapper(Direction.Straight, speed), "F"));
+            }
+            else if (HasFlags(direction, Direction.Back))
+            {
+                //後退
+                return new RobotOutput(this.SetSpeed(this.speedMapper(Direction.Back, speed), "B"));
+            }
+
+            return new RobotOutput(this.SetSpeed(speed, "F"));
+        }
+
+
+        private static bool HasFlags(Direction direction, Direction target)
+        {
+            return (direction & target) == target;
+        }
 
         private string SetSpeed(int speed, string dir)
         {

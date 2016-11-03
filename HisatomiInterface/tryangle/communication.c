@@ -225,7 +225,12 @@ static int analyzeRxData(void)
 			value = 100;
 		}
 
-		if(sComm.rxFrameData[1] == 'F'){
+		if(value==0){
+			sComm.cmd = COMM_CMD_ZERO;
+			sComm.value = value;
+			ret = 1;
+		}
+		else if(sComm.rxFrameData[1] == 'F'){
 			sComm.cmd = COMM_CMD_FB;
 			sComm.value = value;
 			ret = 1;

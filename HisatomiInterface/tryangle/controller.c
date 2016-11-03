@@ -131,9 +131,14 @@ void CTRL_execute(void)
 		}
 		else if(cmd == COMM_CMD_FB){			/* 前後進					*/
 			sCtrl.forward = value;
+			sCtrl.turn = 0;
 		}
 		else if(cmd == COMM_CMD_LR){			/* 左右旋回					*/
 			sCtrl.turn = value;
+		}
+		else if(cmd == COMM_CMD_ZERO){			/* 速度ゼロ					*/
+			sCtrl.turn = value;
+			sCtrl.forward = value;
 		}
 	}
 
