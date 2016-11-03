@@ -10,9 +10,10 @@
 
     public partial class RemoteControlForm : Form
     {
-        private const int Speedstep = 5;
+        private const int SpeedIncStep = 5;
+        private const int SpeedDecStep = 10;
         private CommandConverter.Direction direction = CommandConverter.Direction.None;
-        private CommandConverter converter = new CommandConverter();
+        private CommandConverter converter = new CommandConverter() { SpeedMap = MapSpeed };
         private CsvLogger logger = null;
         private bool increaseFLG = false;
         // シリアルポート
@@ -33,6 +34,25 @@
 
         // デリゲート宣言
         public delegate void DlgLogOutput(byte[] mes);
+
+        /// <summary>
+        /// 速度マッピング
+        /// 粒度を細かくし過ぎると、送信回数が多くなりハングアップにつながるので注意
+        /// </summary>
+        /// <param name="dir">回転</param>
+        /// <param name="speed">生速度</param>
+        /// <returns>マッピング後速度</returns>
+        private static int MapSpeed(CommandConverter.Direction dir, int speed)
+        {
+            // 回転速度は常に30
+            if(dir == CommandConverter.Direction.Left ||dir == CommandConverter.Direction.Right)
+                return 30;
+            // 速度は4段階に変換する
+            if (speed > 0 && speed <= 50) return 30;
+            if (speed > 50 && speed <= 75) return 60;
+            if (speed > 75) return 100;
+            return 0;
+        }
 
         /// <summary>
         /// キーボードで走行方向（WSZAを使用）を入力
@@ -134,11 +154,19 @@
 
             if (this.increaseFLG)
             {
-                speedvalue = 30; //暫定
+                speedvalue += RemoteControlForm.SpeedIncStep;
+                if (speedvalue > this.SpeedTrackBar.Maximum)
+                {
+                    speedvalue = this.SpeedTrackBar.Maximum;
+                }
             }
             else
             {
-                speedvalue = 0;
+                speedvalue -= RemoteControlForm.SpeedDecStep;
+                if (speedvalue < this.SpeedTrackBar.Minimum)
+                {
+                    speedvalue = this.SpeedTrackBar.Minimum;
+                }
             }
             this.SpeedTrackBar.Value = speedvalue;
         }

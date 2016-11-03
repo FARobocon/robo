@@ -5,10 +5,13 @@
     using System.Text;
     using MissionInterface;
 
+    public delegate int SpeedMapper(CommandConverter.Direction dir, int speed);
+
     public class CommandConverter
     {
         private const int QueueSize = 5;
         private Queue<RobotOutput> history = new Queue<RobotOutput>();
+        private SpeedMapper speedMapper = (dir, speed) => speed;
 
         [Flags]
         public enum Direction
@@ -37,6 +40,14 @@
             get
             {
                 return new RobotOutput("<STOP>");
+            }
+        }
+
+        public SpeedMapper SpeedMap
+        {
+            set
+            {
+                this.speedMapper = value;
             }
         }
 
@@ -73,22 +84,22 @@
             if (HasFlags(direction, Direction.Right))
             {
                 //右旋回
-                return new RobotOutput(this.SetSpeed(speed, "R"));
+                return new RobotOutput(this.SetSpeed(this.speedMapper(Direction.Right, speed), "R"));
             }
             else if (HasFlags(direction, Direction.Left))
             {
                 //左旋回
-                return new RobotOutput(this.SetSpeed(speed, "L"));
+                return new RobotOutput(this.SetSpeed(this.speedMapper(Direction.Left, speed), "L"));
             }
             else if (HasFlags(direction, Direction.Straight))
             {
                 //直進
-                return new RobotOutput(this.SetSpeed(speed, "F"));
+                return new RobotOutput(this.SetSpeed(this.speedMapper(Direction.Straight, speed), "F"));
             }
             else if (HasFlags(direction, Direction.Back))
             {
                 //後退
-                return new RobotOutput(this.SetSpeed(speed, "B"));
+                return new RobotOutput(this.SetSpeed(this.speedMapper(Direction.Back, speed), "B"));
             }
 
             return new RobotOutput(this.SetSpeed(speed, "F"));

@@ -129,6 +129,7 @@ void CTRL_execute(void)
 		}
 		else if(cmd == COMM_CMD_FB){			/* ëOå„êi					*/
 			sCtrl.forward = value;
+			sCtrl.turn = 0;
 		}
 		else if(cmd == COMM_CMD_LR){			/* ç∂âEê˘âÒ					*/
 			sCtrl.turn = value;
