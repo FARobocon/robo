@@ -24,7 +24,6 @@
 typedef enum {								/* 受信データ解析状態			*/
 	STATE_WAIT,								/*   開始受信待ち				*/
 	STATE_CMD,								/*   コマンド受信中				*/
-	STATE_END								/*   終了受信完了				*/
 } eRxState;
 
 typedef struct {
@@ -123,26 +122,24 @@ int COMM_isReceived(void)
 					sComm.rxFrameData[sComm.rxFrameSize] = sComm.btRxBuff[i];
 					sComm.rxFrameSize++;
 					if(sComm.btRxBuff[i] == '>'){
-						sComm.rxStatus = STATE_END;
-					}
-					break;
-				case STATE_END:
-					sComm.rxFrameData[sComm.rxFrameSize] = '\0';
+						/* コマンド受信完了 */
+						sComm.rxFrameData[sComm.rxFrameSize] = '\0';
 #if 1
-					/* デバッグ用に受信データをLCDに表示 */
-					display_clear(0);
-					display_goto_xy(0, 1);
-					display_string((const char*)sComm.rxFrameData);
-					display_update();
+						/* デバッグ用に受信データをLCDに表示 */
+						display_clear(0);
+						display_goto_xy(0, 1);
+						display_string((const char*)sComm.rxFrameData);
+						display_update();
 #endif
-					/* 受信データを解析 */
-					if(analyzeRxData() == 1){
-						/* 有効なデータの場合はレスポンスを送信 */
-						ecrobot_send_bt("<OK>", 0, 4);
-						ret = 1;
+						/* 受信データを解析 */
+						if(analyzeRxData() == 1){
+							/* 有効なデータの場合はレスポンスを送信 */
+							ecrobot_send_bt("<OK>", 0, 4);
+							ret = 1;
+						}
+						sComm.rxFrameSize = 0;
+						sComm.rxStatus = STATE_WAIT;
 					}
-					sComm.rxFrameSize = 0;
-					sComm.rxStatus = STATE_WAIT;
 					break;
 				default:
 					sComm.rxFrameSize = 0;
