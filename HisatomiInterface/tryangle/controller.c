@@ -94,10 +94,6 @@ void CTRL_initialize(void)
 	TOUCH_initialize();						/* タッチセンサの初期化			*/
 	COMM_initialize();						/* 通信の初期化					*/
 	TAIL_initialize();						/* 尻尾の初期化					*/
-	balance_init();							/* 倒立振子制御初期化			*/
-
-	nxt_motor_set_count(PORT_WHEEL_L, 0);	/* 左モータエンコーダリセット	*/
-	nxt_motor_set_count(PORT_WHEEL_R, 0);	/* 右モータエンコーダリセット	*/
 
 	sCtrl.count100ms = 0;
 	sCtrl.waitTimer  = 0;
@@ -159,6 +155,9 @@ void CTRL_execute(void)
 			}
 			break;
 		case STATE_READY:
+			balance_init();							/* 倒立振子制御初期化			*/
+			nxt_motor_set_count(PORT_WHEEL_L, 0);	/* 左モータエンコーダリセット	*/
+			nxt_motor_set_count(PORT_WHEEL_R, 0);	/* 右モータエンコーダリセット	*/
 			TAIL_setPosition(TAIL_ANGLE_STAND_UP);
 			stop();
 			sCtrl.runStatus = STATE_WAIT;
@@ -197,6 +196,7 @@ void CTRL_execute(void)
 			break;
 		case STATE_STOP:
 			stop();
+			sCtrl.runStatus = STATE_READY;
 			break;
 		default:
 			sCtrl.runStatus = STATE_STOP;
